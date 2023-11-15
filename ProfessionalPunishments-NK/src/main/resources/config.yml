@@ -1,0 +1,31 @@
+# In this section, you can handle some settings to customize your plugin.
+settings:
+  # The standard provider is 'Yaml'. All data will be saved locally in a file.
+  # We recommend saving the data with a database like 'MySQL' or 'MongoDB'.
+  provider: Yaml
+
+  # Decide which message file should be loaded and used to display messages. The name of the file must be specified, and it must be located in the 'lang' folder.
+  # Examples: 'en-us' for the American translation; 'de-de' for the German translation.
+  # You can customize these files or create your own language file by copying and renaming them.
+  lang: 'en-us'
+
+# If you set the provider to 'MongoDB', please specify the connection uri and the database.
+mongodb:
+  uri: "mongodb://<user>:<password>@<ipAddress>:27017/"
+  database: "punishments"
+
+# If you set the provider to 'MySQL', please specify the needed data to connect to your MySQL database.
+mysql:
+  host: "127.0.0.1"
+  port: "3306"
+  user: "root"
+  database: "punishments"
+  password: "strongpassword"
+
+# This plugin stores the credentials for the database only in this file. The plugin uses this data only to
+# connect to the databases. This data is not shared or stored for other applications.
+
+
+
+# Do not edit the config version!
+version: 1
