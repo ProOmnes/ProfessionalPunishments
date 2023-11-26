@@ -50,12 +50,40 @@ public interface IDataAccess {
     void unmutePlayer(final String target, final String initiator, final String reason);
 
     /**
+     * @param target The player who will be warned
+     * @param reason The reason why the player has to be warned
+     * @param initiator The player who initiated this action
+     * @param minutes The time, how long the player will be warned
+     */
+    void warnPlayer(final String target, final String reason, final String initiator, final int minutes);
+
+    /**
+     * @param target Player, who is currently warned
+     * @param punishments Consumer
+     */
+    void getActiveWarnings(final String target, final Consumer<Set<Punishment>> punishments);
+
+    /**
+     * @param target The player whose warning is to be revoked
+     * @param warnId The exact warning identification
+     * @param initiator The player who initiated this action
+     * @param reason The reason why the warning is to be revoked
+     */
+    void unwarnPlayer(final String target, final String warnId, final String initiator, final String reason);
+
+    /**
      * @param id The ID that is to be checked
      * @param type The punishment type to be searched for
-     * @param searchInHistory Search in logs
      * @param exists Consumer
      */
-    void punishmentIdExists(final String id, final Punishment.Type type, final boolean searchInHistory, final Consumer<Boolean> exists);
+    void punishmentIdExists(final String id, final Punishment.Type type, final Consumer<Boolean> exists);
+
+    /**
+     * @param id The ID that is to be checked
+     * @param type The punishment log type to be searched for
+     * @param exists Consumer
+     */
+    void punishmentLogIdExists(final String id, final Punishment.LogType type, final Consumer<Boolean> exists);
 
     /**
      * @param target Player, who is currently banned
@@ -64,28 +92,10 @@ public interface IDataAccess {
     void getBan(final String target, final Consumer<Punishment> punishmentConsumer);
 
     /**
-     * @param target Player to whom the logs are to be queried
-     * @param punishmentConsumer Consumer
-     */
-    void getBanLogs(final String target, final Consumer<Set<Punishment>> punishmentConsumer);
-
-    /**
      * @param target Player, who is currently muted
      * @param punishmentConsumer Consumer
      */
     void getMute(final String target, final Consumer<Punishment> punishmentConsumer);
-
-    /**
-     * @param target Player to whom the logs are to be queried
-     * @param punishmentConsumer Consumer
-     */
-    void getMuteLogs(final String target, final Consumer<Set<Punishment>> punishmentConsumer);
-
-    /**
-     * @param target Player to whom the logs are to be queried
-     * @param warnings Consumer
-     */
-    void getWarnings(final String target, final Consumer<Set<Punishment>> warnings);
 
     /**
      * @param punishment Punishment that is to be changed
@@ -107,18 +117,26 @@ public interface IDataAccess {
 
     /**
      * @param punishment Punishment whose data is to be created as a log
+     * @param type Type of punishment 'LOG_x'
      */
-    void insertLog(final Punishment punishment);
+    void insertLog(final Punishment punishment, final Punishment.LogType type);
+
+    /**
+     * @param target The player whose data should be printed
+     * @param type Type of punishment log
+     * @param punishmentConsumer Consumer
+     */
+    void getLogs(final String target, final Punishment.LogType type, final Consumer<Set<Punishment>> punishmentConsumer);
 
     /**
      * @param target The player whose data should be cleared
      * @param type Type of punishment
      */
-    void clearLogs(final String target, final Punishment.Type type);
+    void clearLogs(final String target, final Punishment.LogType type);
 
     /**
-     * @param id The ID via which a punishment is to be deleted
+     * @param id The ID via which a punishment log entry is to be deleted
      */
-    void deleteEntry(final String id);
+    void deleteLogEntry(final String id);
 
 }
