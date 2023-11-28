@@ -16,7 +16,22 @@ public class Punishment {
     private final String reason;
     private final String initiator;
     private final String date;
-    private final long ending;
+    private final long expire;
+
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    public static class Log {
+
+        private final String id;
+        private final String relatedId;
+        private final LogType logType;
+        private final String target;
+        private final String reason;
+        private final String initiator;
+        private final String date;
+
+    }
 
     public enum Type {
 

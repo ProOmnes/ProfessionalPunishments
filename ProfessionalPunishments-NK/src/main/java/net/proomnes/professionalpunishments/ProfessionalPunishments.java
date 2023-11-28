@@ -48,7 +48,7 @@ public class ProfessionalPunishments extends PluginBase {
     }
 
     public String getRandomId(final int length) {
-        final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        final String chars = "abcdefgxyz1234567890";
         final StringBuilder stringBuilder = new StringBuilder();
         final Random rnd = new Random();
         while (stringBuilder.length() < length) {
@@ -56,6 +56,10 @@ public class ProfessionalPunishments extends PluginBase {
             stringBuilder.append(chars.charAt(index));
         }
         return stringBuilder.toString();
+    }
+
+    public String getRandomId(final int length, final String prefix) {
+        return prefix + "-" + this.getRandomId(length);
     }
 
     public String getDateWithTime() {
