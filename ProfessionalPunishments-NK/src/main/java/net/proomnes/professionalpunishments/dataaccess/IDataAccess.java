@@ -116,17 +116,16 @@ public interface IDataAccess {
     void getPunishment(final String id, final Consumer<Punishment> punishmentConsumer);
 
     /**
-     * @param punishment Punishment whose data is to be created as a log
-     * @param type Type of punishment 'LOG_x'
+     * @param log Punishment whose data is to be created as a log
      */
-    void insertLog(final Punishment punishment, final Punishment.LogType type);
+    void insertLog(final Punishment.Log log);
 
     /**
      * @param target The player whose data should be printed
      * @param type Type of punishment log
      * @param punishmentConsumer Consumer
      */
-    void getLogs(final String target, final Punishment.LogType type, final Consumer<Set<Punishment>> punishmentConsumer);
+    void getLogs(final String target, final Punishment.LogType type, final Consumer<Set<Punishment.Log>> punishmentConsumer);
 
     /**
      * @param target The player whose data should be cleared
