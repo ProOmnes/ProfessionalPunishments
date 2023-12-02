@@ -428,23 +428,49 @@ public class MongoDBDataAccess implements IDataAccess {
     @Override
     public void getPunishment(String id, Consumer<Punishment> punishmentConsumer) {
         CompletableFuture.runAsync(() -> {
-            Punishment punishment = null;
-
-            final Document document = this.muteCollection.find(new Document("_id", id)).first();
-            if (document != null) {
-                punishment = new Punishment(
-                        document.getString("_id"),
-                        document.getString("relatedId"),
-                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
-                        document.getString("target"),
-                        document.getString("reason"),
-                        document.getString("initiator"),
-                        document.getString("date"),
-                        document.getLong("expire")
-                );
+            final Document ban = this.banCollection.find(new Document("_id", id)).first();
+            if (ban == null) {
+                final Document mute = this.muteCollection.find(new Document("_id", id)).first();
+                if (mute == null) {
+                    final Document warning = this.warningCollection.find(new Document("_id", id)).first();
+                    if (warning == null) {
+                        punishmentConsumer.accept(null);
+                    } else {
+                        punishmentConsumer.accept(new Punishment(
+                                warning.getString("_id"),
+                                warning.getString("relatedId"),
+                                Punishment.Type.valueOf(warning.getString("type").toUpperCase()),
+                                warning.getString("target"),
+                                warning.getString("reason"),
+                                warning.getString("initiator"),
+                                warning.getString("date"),
+                                warning.getLong("expire")
+                        ));
+                    }
+                } else {
+                    punishmentConsumer.accept(new Punishment(
+                            mute.getString("_id"),
+                            mute.getString("relatedId"),
+                            Punishment.Type.valueOf(mute.getString("type").toUpperCase()),
+                            mute.getString("target"),
+                            mute.getString("reason"),
+                            mute.getString("initiator"),
+                            mute.getString("date"),
+                            mute.getLong("expire")
+                    ));
+                }
+            } else {
+                punishmentConsumer.accept(new Punishment(
+                        ban.getString("_id"),
+                        ban.getString("relatedId"),
+                        Punishment.Type.valueOf(ban.getString("type").toUpperCase()),
+                        ban.getString("target"),
+                        ban.getString("reason"),
+                        ban.getString("initiator"),
+                        ban.getString("date"),
+                        ban.getLong("expire")
+                ));
             }
-
-            punishmentConsumer.accept(punishment);
         });
     }
 
