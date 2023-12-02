@@ -2,14 +2,22 @@ package net.proomnes.professionalpunishments;
 
 import cn.nukkit.plugin.PluginBase;
 import lombok.Getter;
+import net.proomnes.professionalpunishments.dataaccess.IDataAccess;
+import net.proomnes.professionalpunishments.dataaccess.MongoDBDataAccess;
+import net.proomnes.professionalpunishments.dataaccess.MySQLDataAccess;
+import net.proomnes.professionalpunishments.dataaccess.YamlDataAccess;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Getter
 public class ProfessionalPunishments extends PluginBase {
+
+    private IDataAccess dataAccess;
 
     @Override
     public void onLoad() {
@@ -27,7 +35,22 @@ public class ProfessionalPunishments extends PluginBase {
     }
 
     private void setUpProvider() {
-
+        switch (this.getConfig().getString("settings.provider")) {
+            case "Yaml":
+                this.dataAccess = new YamlDataAccess(this);
+                break;
+            case "MongoDB":
+                this.dataAccess = new MongoDBDataAccess(this);
+                final Logger mongoLogger = Logger.getLogger("org.mongodb.driver");
+                mongoLogger.setLevel(Level.OFF);
+                break;
+            case "MySQL":
+                this.dataAccess = new MySQLDataAccess(this);
+                break;
+            default:
+                this.getLogger().error("§4[ProfessionalPunishments] Please specify a valid provider: 'Yaml', 'MySQL', 'MongoDB'.");
+                break;
+        }
     }
 
     private void loadPlugin() {
