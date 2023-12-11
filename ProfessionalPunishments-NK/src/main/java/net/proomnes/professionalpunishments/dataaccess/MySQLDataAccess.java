@@ -267,7 +267,7 @@ public class MySQLDataAccess implements IDataAccess {
             // get all warnings
             for (final Document document : this.client.find("warnings", "target", target).results()) {
                 final Punishment entry = new Punishment(
-                        document.getString("_id"),
+                        document.getString("id"),
                         document.getString("relatedId"),
                         Punishment.Type.valueOf(document.getString("type").toUpperCase()),
                         document.getString("target"),
@@ -280,6 +280,31 @@ public class MySQLDataAccess implements IDataAccess {
             }
 
             punishments.accept(warnings);
+        });
+    }
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllActiveWarnings(Consumer<Set<Punishment>> punishmentConsumer) {
+        CompletableFuture.runAsync(() -> {
+            final Set<Punishment> punishments = new HashSet<>();
+
+            for (final Document document : this.client.find("warnings").results()) {
+                punishments.add(new Punishment(
+                        document.getString("id"),
+                        document.getString("relatedId"),
+                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                        document.getString("target"),
+                        document.getString("reason"),
+                        document.getString("initiator"),
+                        document.getString("date"),
+                        document.getLong("expire")
+                ));
+            }
+
+            punishmentConsumer.accept(punishments);
         });
     }
 
@@ -361,7 +386,7 @@ public class MySQLDataAccess implements IDataAccess {
             final Document document = this.client.find("bans", "target", target).first();
             if (document != null) {
                 punishment = new Punishment(
-                        document.getString("_id"),
+                        document.getString("id"),
                         document.getString("relatedId"),
                         Punishment.Type.valueOf(document.getString("type").toUpperCase()),
                         document.getString("target"),
@@ -377,6 +402,31 @@ public class MySQLDataAccess implements IDataAccess {
     }
 
     /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllBans(Consumer<Set<Punishment>> punishmentConsumer) {
+        CompletableFuture.runAsync(() -> {
+            final Set<Punishment> punishments = new HashSet<>();
+
+            for (final Document document : this.client.find("bans").results()) {
+                punishments.add(new Punishment(
+                        document.getString("id"),
+                        document.getString("relatedId"),
+                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                        document.getString("target"),
+                        document.getString("reason"),
+                        document.getString("initiator"),
+                        document.getString("date"),
+                        document.getLong("expire")
+                ));
+            }
+
+            punishmentConsumer.accept(punishments);
+        });
+    }
+
+    /**
      * @param target             Player, who is currently muted
      * @param punishmentConsumer Consumer
      */
@@ -388,7 +438,7 @@ public class MySQLDataAccess implements IDataAccess {
             final Document document = this.client.find("mutes", "target", target).first();
             if (document != null) {
                 punishment = new Punishment(
-                        document.getString("_id"),
+                        document.getString("id"),
                         document.getString("relatedId"),
                         Punishment.Type.valueOf(document.getString("type").toUpperCase()),
                         document.getString("target"),
@@ -400,6 +450,31 @@ public class MySQLDataAccess implements IDataAccess {
             }
 
             punishmentConsumer.accept(punishment);
+        });
+    }
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllMutes(Consumer<Set<Punishment>> punishmentConsumer) {
+        CompletableFuture.runAsync(() -> {
+            final Set<Punishment> punishments = new HashSet<>();
+
+            for (final Document document : this.client.find("mutes").results()) {
+                punishments.add(new Punishment(
+                        document.getString("id"),
+                        document.getString("relatedId"),
+                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                        document.getString("target"),
+                        document.getString("reason"),
+                        document.getString("initiator"),
+                        document.getString("date"),
+                        document.getLong("expire")
+                ));
+            }
+
+            punishmentConsumer.accept(punishments);
         });
     }
 
@@ -506,7 +581,7 @@ public class MySQLDataAccess implements IDataAccess {
     public void insertLog(Punishment.Log log) {
         CompletableFuture.runAsync(() -> {
             final Document document = new Document(
-                    "_id", log.getId()
+                    "id", log.getId()
             ).append(
                     "relatedId", log.getRelatedId()
             ).append(
@@ -538,7 +613,7 @@ public class MySQLDataAccess implements IDataAccess {
             for (final Document document : this.client.find("logs", "target", target).results()) {
                 if (document.getString("logType").equals(type.name())) {
                     logs.add(new Punishment.Log(
-                            document.getString("_id"),
+                            document.getString("id"),
                             document.getString("relatedId"),
                             Punishment.LogType.valueOf(document.getString("logType").toUpperCase()),
                             document.getString("target"),
@@ -547,6 +622,30 @@ public class MySQLDataAccess implements IDataAccess {
                             document.getString("date")
                     ));
                 }
+            }
+
+            punishmentConsumer.accept(logs);
+        });
+    }
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllLogs(Consumer<Set<Punishment.Log>> punishmentConsumer) {
+        CompletableFuture.runAsync(() -> {
+            final Set<Punishment.Log> logs = new HashSet<>();
+
+            for (final Document document : this.client.find("logs").results()) {
+                logs.add(new Punishment.Log(
+                        document.getString("id"),
+                        document.getString("relatedId"),
+                        Punishment.LogType.valueOf(document.getString("logType").toUpperCase()),
+                        document.getString("target"),
+                        document.getString("reason"),
+                        document.getString("initiator"),
+                        document.getString("date")
+                ));
             }
 
             punishmentConsumer.accept(logs);

@@ -208,6 +208,29 @@ public class YamlDataAccess implements IDataAccess {
     }
 
     /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllActiveWarnings(Consumer<Set<Punishment>> punishmentConsumer) {
+        final Set<Punishment> warnings = new HashSet<>();
+
+        this.warnings.getSection("warning").getAll().getKeys().forEach(id -> {
+            warnings.add(new Punishment(
+                    id,
+                    this.warnings.getString("warning." + id + ".relatedId"),
+                    Punishment.Type.valueOf(this.warnings.getString("warning." + id + ".type")),
+                    this.warnings.getString("warning." + id + ".target"),
+                    this.warnings.getString("warning." + id + ".reason"),
+                    this.warnings.getString("warning." + id + ".initiator"),
+                    this.warnings.getString("warning." + id + ".date"),
+                    this.warnings.getLong("warning." + id + ".expire")
+            ));
+        });
+
+        punishmentConsumer.accept(warnings);
+    }
+
+    /**
      * @param target    The player whose warning is to be revoked
      * @param warnId    The exact warning identification
      * @param initiator The player who initiated this action
@@ -282,6 +305,29 @@ public class YamlDataAccess implements IDataAccess {
     }
 
     /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllBans(Consumer<Set<Punishment>> punishmentConsumer) {
+        final Set<Punishment> punishments = new HashSet<>();
+
+        this.bans.getSection("ban").getAll().getKeys().forEach(id -> {
+            punishments.add(new Punishment(
+                    id,
+                    this.bans.getString("ban." + id + ".relatedId"),
+                    Punishment.Type.valueOf(this.warnings.getString("ban." + id + ".type")),
+                    this.bans.getString("ban." + id + ".target"),
+                    this.bans.getString("ban." + id + ".reason"),
+                    this.bans.getString("ban." + id + ".initiator"),
+                    this.bans.getString("ban." + id + ".date"),
+                    this.bans.getLong("ban." + id + ".expire")
+            ));
+        });
+
+        punishmentConsumer.accept(punishments);
+    }
+
+    /**
      * @param target             Player, who is currently muted
      * @param punishmentConsumer Consumer
      */
@@ -301,6 +347,29 @@ public class YamlDataAccess implements IDataAccess {
                 ));
             }
         });
+    }
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllMutes(Consumer<Set<Punishment>> punishmentConsumer) {
+        final Set<Punishment> punishments = new HashSet<>();
+
+        this.mutes.getSection("mute").getAll().getKeys().forEach(id -> {
+            punishments.add(new Punishment(
+                    id,
+                    this.mutes.getString("mute." + id + ".relatedId"),
+                    Punishment.Type.valueOf(this.warnings.getString("mute." + id + ".type")),
+                    this.mutes.getString("mute." + id + ".target"),
+                    this.mutes.getString("mute." + id + ".reason"),
+                    this.mutes.getString("mute." + id + ".initiator"),
+                    this.mutes.getString("mute." + id + ".date"),
+                    this.mutes.getLong("mute." + id + ".expire")
+            ));
+        });
+
+        punishmentConsumer.accept(punishments);
     }
 
     /**
@@ -439,6 +508,28 @@ public class YamlDataAccess implements IDataAccess {
                         this.logs.getString("log." + id + ".date")
                 ));
             }
+        });
+
+        punishmentConsumer.accept(logs);
+    }
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllLogs(Consumer<Set<Punishment.Log>> punishmentConsumer) {
+        final Set<Punishment.Log> logs = new HashSet<>();
+
+        this.logs.getSection("log").getAll().getKeys().forEach(id -> {
+            logs.add(new Punishment.Log(
+                    id,
+                    this.logs.getString("log." + id + ".relatedId"),
+                    Punishment.LogType.valueOf(this.logs.getString("log." + id + ".logType")),
+                    this.logs.getString("log." + id + ".target"),
+                    this.logs.getString("log." + id + ".reason"),
+                    this.logs.getString("log." + id + ".initiator"),
+                    this.logs.getString("log." + id + ".date")
+            ));
         });
 
         punishmentConsumer.accept(logs);

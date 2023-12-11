@@ -63,6 +63,12 @@ public interface IDataAccess {
      */
     void getActiveWarnings(final String target, final Consumer<Set<Punishment>> punishments);
 
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    void getAllActiveWarnings(final Consumer<Set<Punishment>> punishmentConsumer);
+
     /**
      * @param target The player whose warning is to be revoked
      * @param warnId The exact warning identification
@@ -92,10 +98,21 @@ public interface IDataAccess {
     void getBan(final String target, final Consumer<Punishment> punishmentConsumer);
 
     /**
+     * @param punishmentConsumer Consumer
+     */
+    void getAllBans(final Consumer<Set<Punishment>> punishmentConsumer);
+
+    /**
      * @param target Player, who is currently muted
      * @param punishmentConsumer Consumer
      */
     void getMute(final String target, final Consumer<Punishment> punishmentConsumer);
+
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    void getAllMutes(final Consumer<Set<Punishment>> punishmentConsumer);
 
     /**
      * @param punishment Punishment that is to be changed
@@ -126,6 +143,11 @@ public interface IDataAccess {
      * @param punishmentConsumer Consumer
      */
     void getLogs(final String target, final Punishment.LogType type, final Consumer<Set<Punishment.Log>> punishmentConsumer);
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    void getAllLogs(final Consumer<Set<Punishment.Log>> punishmentConsumer);
 
     /**
      * @param target The player whose data should be cleared

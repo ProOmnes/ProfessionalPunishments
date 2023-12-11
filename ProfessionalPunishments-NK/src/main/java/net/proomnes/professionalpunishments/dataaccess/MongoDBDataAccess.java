@@ -250,6 +250,31 @@ public class MongoDBDataAccess implements IDataAccess {
     }
 
     /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllActiveWarnings(Consumer<Set<Punishment>> punishmentConsumer) {
+        CompletableFuture.runAsync(() -> {
+            final Set<Punishment> punishments = new HashSet<>();
+
+            for (final Document document : this.warningCollection.find()) {
+                punishments.add(new Punishment(
+                        document.getString("_id"),
+                        document.getString("relatedId"),
+                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                        document.getString("target"),
+                        document.getString("reason"),
+                        document.getString("initiator"),
+                        document.getString("date"),
+                        document.getLong("expire")
+                ));
+            }
+
+            punishmentConsumer.accept(punishments);
+        });
+    }
+
+    /**
      * @param target    The player whose warning is to be revoked
      * @param warnId    The exact warning identification
      * @param initiator The player who initiated this action
@@ -343,6 +368,31 @@ public class MongoDBDataAccess implements IDataAccess {
     }
 
     /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllBans(Consumer<Set<Punishment>> punishmentConsumer) {
+        CompletableFuture.runAsync(() -> {
+            final Set<Punishment> punishments = new HashSet<>();
+
+            for (final Document document : this.banCollection.find()) {
+                punishments.add(new Punishment(
+                        document.getString("_id"),
+                        document.getString("relatedId"),
+                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                        document.getString("target"),
+                        document.getString("reason"),
+                        document.getString("initiator"),
+                        document.getString("date"),
+                        document.getLong("expire")
+                ));
+            }
+
+            punishmentConsumer.accept(punishments);
+        });
+    }
+
+    /**
      * @param target             Player, who is currently muted
      * @param punishmentConsumer Consumer
      */
@@ -366,6 +416,31 @@ public class MongoDBDataAccess implements IDataAccess {
             }
 
             punishmentConsumer.accept(punishment);
+        });
+    }
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllMutes(Consumer<Set<Punishment>> punishmentConsumer) {
+        CompletableFuture.runAsync(() -> {
+            final Set<Punishment> punishments = new HashSet<>();
+
+            for (final Document document : this.muteCollection.find()) {
+                punishments.add(new Punishment(
+                        document.getString("_id"),
+                        document.getString("relatedId"),
+                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                        document.getString("target"),
+                        document.getString("reason"),
+                        document.getString("initiator"),
+                        document.getString("date"),
+                        document.getLong("expire")
+                ));
+            }
+
+            punishmentConsumer.accept(punishments);
         });
     }
 
@@ -511,6 +586,30 @@ public class MongoDBDataAccess implements IDataAccess {
             final Set<Punishment.Log> logs = new HashSet<>();
 
             for (final Document document : this.logCollection.find(new Document("target", target).append("logType", type.name()))) {
+                logs.add(new Punishment.Log(
+                        document.getString("_id"),
+                        document.getString("relatedId"),
+                        Punishment.LogType.valueOf(document.getString("logType").toUpperCase()),
+                        document.getString("target"),
+                        document.getString("reason"),
+                        document.getString("initiator"),
+                        document.getString("date")
+                ));
+            }
+
+            punishmentConsumer.accept(logs);
+        });
+    }
+
+    /**
+     * @param punishmentConsumer Consumer
+     */
+    @Override
+    public void getAllLogs(Consumer<Set<Punishment.Log>> punishmentConsumer) {
+        CompletableFuture.runAsync(() -> {
+            final Set<Punishment.Log> logs = new HashSet<>();
+
+            for (final Document document : this.logCollection.find()) {
                 logs.add(new Punishment.Log(
                         document.getString("_id"),
                         document.getString("relatedId"),
