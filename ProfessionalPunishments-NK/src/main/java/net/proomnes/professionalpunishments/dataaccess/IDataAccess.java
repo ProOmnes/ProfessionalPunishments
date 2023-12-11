@@ -13,7 +13,7 @@ public interface IDataAccess {
      * @param initiator The player who initiated this action
      * @param minutes The time, how long the player will be banned
      */
-    void banPlayer(final String target, final String reason, final String initiator, final int minutes);
+    void banPlayer(final String target, final String reason, final String initiator, final int minutes, final Consumer<String> id);
 
     /**
      * @param target The player who is probably banned
@@ -26,7 +26,7 @@ public interface IDataAccess {
      * @param initiator The player who initiated this action
      * @param reason The reason why the ban is to be revoked
      */
-    void unbanPlayer(final String target, final String initiator, final String reason);
+    void unbanPlayer(final String target, final String initiator, final String reason, final Consumer<String> id);
 
     /**
      * @param target The player who will be muted
@@ -34,7 +34,7 @@ public interface IDataAccess {
      * @param initiator The player who initiated this action
      * @param minutes The time, how long the player will be muted
      */
-    void mutePlayer(final String target, final String reason, final String initiator, final int minutes);
+    void mutePlayer(final String target, final String reason, final String initiator, final int minutes, final Consumer<String> id);
 
     /**
      * @param target The player who is probably muted
@@ -47,7 +47,7 @@ public interface IDataAccess {
      * @param initiator The player who initiated this action
      * @param reason The reason why the mute is to be revoked
      */
-    void unmutePlayer(final String target, final String initiator, final String reason);
+    void unmutePlayer(final String target, final String initiator, final String reason, final Consumer<String> id);
 
     /**
      * @param target The player who will be warned
@@ -55,7 +55,7 @@ public interface IDataAccess {
      * @param initiator The player who initiated this action
      * @param minutes The time, how long the player will be warned
      */
-    void warnPlayer(final String target, final String reason, final String initiator, final int minutes);
+    void warnPlayer(final String target, final String reason, final String initiator, final int minutes, final Consumer<String> id);
 
     /**
      * @param target Player, who is currently warned
@@ -75,7 +75,7 @@ public interface IDataAccess {
      * @param initiator The player who initiated this action
      * @param reason The reason why the warning is to be revoked
      */
-    void unwarnPlayer(final String target, final String warnId, final String initiator, final String reason);
+    void unwarnPlayer(final String target, final String warnId, final String initiator, final String reason, final Consumer<String> id);
 
     /**
      * @param id The ID that is to be checked

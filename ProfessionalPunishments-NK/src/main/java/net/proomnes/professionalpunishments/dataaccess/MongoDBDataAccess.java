@@ -45,7 +45,7 @@ public class MongoDBDataAccess implements IDataAccess {
      * @param minutes   The time, how long the player will be banned
      */
     @Override
-    public void banPlayer(String target, String reason, String initiator, int minutes) {
+    public void banPlayer(String target, String reason, String initiator, int minutes, Consumer<String> id) {
         CompletableFuture.runAsync(() -> {
             // inserting new ban
             final String generatedId = this.professionalPunishments.getRandomId(5, "B");
@@ -74,6 +74,8 @@ public class MongoDBDataAccess implements IDataAccess {
 
             // inserting ban log
             this.insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "BL"), generatedId, Punishment.LogType.LOG_BAN, target, reason, initiator, date));
+
+            id.accept(generatedId);
         });
     }
 
@@ -95,7 +97,7 @@ public class MongoDBDataAccess implements IDataAccess {
      * @param reason    The reason why the ban is to be revoked
      */
     @Override
-    public void unbanPlayer(String target, String initiator, String reason) {
+    public void unbanPlayer(String target, String initiator, String reason, Consumer<String> id) {
         CompletableFuture.runAsync(() -> {
             this.getBan(target, punishment -> {
                 // get active ban and inserting unban log
@@ -105,6 +107,8 @@ public class MongoDBDataAccess implements IDataAccess {
 
                 // delete active ban
                 this.banCollection.deleteOne(new Document("_id", punishment.getId()));
+
+                id.accept(generatedId);
             });
         });
     }
@@ -116,7 +120,7 @@ public class MongoDBDataAccess implements IDataAccess {
      * @param minutes   The time, how long the player will be muted
      */
     @Override
-    public void mutePlayer(String target, String reason, String initiator, int minutes) {
+    public void mutePlayer(String target, String reason, String initiator, int minutes, Consumer<String> id) {
         CompletableFuture.runAsync(() -> {
             // inserting new ban
             final String generatedId = this.professionalPunishments.getRandomId(5, "M");
@@ -147,6 +151,8 @@ public class MongoDBDataAccess implements IDataAccess {
 
             // inserting mute log
             this.insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "ML"), generatedId, Punishment.LogType.LOG_MUTE, target, reason, initiator, date));
+
+            id.accept(generatedId);
         });
     }
 
@@ -168,7 +174,7 @@ public class MongoDBDataAccess implements IDataAccess {
      * @param reason    The reason why the mute is to be revoked
      */
     @Override
-    public void unmutePlayer(String target, String initiator, String reason) {
+    public void unmutePlayer(String target, String initiator, String reason, Consumer<String> id) {
         CompletableFuture.runAsync(() -> {
             this.getMute(target, punishment -> {
                 // get active ban and inserting unban log
@@ -178,6 +184,8 @@ public class MongoDBDataAccess implements IDataAccess {
 
                 // delete active ban
                 this.muteCollection.deleteOne(new Document("_id", punishment.getId()));
+
+                id.accept(generatedId);
             });
         });
     }
@@ -189,7 +197,7 @@ public class MongoDBDataAccess implements IDataAccess {
      * @param minutes   The time, how long the player will be warned
      */
     @Override
-    public void warnPlayer(String target, String reason, String initiator, int minutes) {
+    public void warnPlayer(String target, String reason, String initiator, int minutes, Consumer<String> id) {
         CompletableFuture.runAsync(() -> {
             // inserting new warning
             final String generatedId = this.professionalPunishments.getRandomId(5, "W");
@@ -218,6 +226,8 @@ public class MongoDBDataAccess implements IDataAccess {
 
             // inserting warning log
             this.insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "WL"), generatedId, Punishment.LogType.LOG_WARNING, target, reason, initiator, date));
+
+            id.accept(generatedId);
         });
     }
 
@@ -281,7 +291,7 @@ public class MongoDBDataAccess implements IDataAccess {
      * @param reason    The reason why the warning is to be revoked
      */
     @Override
-    public void unwarnPlayer(String target, String warnId, String initiator, String reason) {
+    public void unwarnPlayer(String target, String warnId, String initiator, String reason, Consumer<String> id) {
         CompletableFuture.runAsync(() -> {
             this.getPunishment(warnId, punishment -> {
                 // get active warning and inserting unwarn log
@@ -291,6 +301,8 @@ public class MongoDBDataAccess implements IDataAccess {
 
                 // delete active warning
                 this.muteCollection.deleteOne(new Document("_id", punishment.getId()));
+
+                id.accept(generatedId);
             });
         });
     }
