@@ -9,6 +9,12 @@ settings:
   # You can customize these files or create your own language file by copying and renaming them.
   lang: 'en-us'
 
+  # All data from this plugin is stored temporarily in a cache. To update this cache when something changes, there is an update interval.
+  # Specify in seconds after how many seconds this cache should be updated.
+  # It is not recommended to set this value below 30 seconds due to possible performance issues.
+  # If you run this plugin on one single server: Set this value to '0' if you want to disable the update interval.
+  update-interval: 45
+
 # If you set the provider to 'MongoDB', please specify the connection uri and the database.
 mongodb:
   uri: "mongodb://<user>:<password>@<ipAddress>:27017/"

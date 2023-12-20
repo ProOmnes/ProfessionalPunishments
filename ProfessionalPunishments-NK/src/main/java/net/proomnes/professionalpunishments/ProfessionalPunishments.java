@@ -6,6 +6,11 @@ import net.proomnes.professionalpunishments.dataaccess.IDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.MongoDBDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.MySQLDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.YamlDataAccess;
+import net.proomnes.professionalpunishments.services.BanService;
+import net.proomnes.professionalpunishments.services.DataService;
+import net.proomnes.professionalpunishments.services.MuteService;
+import net.proomnes.professionalpunishments.services.WarningService;
+import net.proomnes.professionalpunishments.util.tasks.UpdateDataTask;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,6 +23,11 @@ import java.util.logging.Logger;
 public class ProfessionalPunishments extends PluginBase {
 
     private IDataAccess dataAccess;
+
+    private BanService banService;
+    private MuteService muteService;
+    private WarningService warningService;
+    private DataService dataService;
 
     @Override
     public void onLoad() {
@@ -57,12 +67,20 @@ public class ProfessionalPunishments extends PluginBase {
         // utils
 
         // services
+        this.banService = new BanService(this);
+        this.muteService = new MuteService(this);
+        this.warningService = new WarningService(this);
+        this.dataService = new DataService(this);
 
         // api
 
         // listeners
 
         // commands
+
+        // tasks
+        final int interval = this.getConfig().getInt("settings.update-interval");
+        this.getServer().getScheduler().scheduleDelayedRepeatingTask(new UpdateDataTask(this), interval * 60, interval * 60, true);
     }
 
     @Override
