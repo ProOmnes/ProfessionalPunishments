@@ -10,13 +10,13 @@ import lombok.Setter;
 public class Punishment {
 
     private final String id;
-    private final String relatedId;
+    private String relatedId;
     private final Type type;
-    private final String target;
-    private final String reason;
-    private final String initiator;
-    private final String date;
-    private final long expire;
+    private String target;
+    private String reason;
+    private String initiator;
+    private String date;
+    private long expire;
 
     @AllArgsConstructor
     @Getter
@@ -24,12 +24,12 @@ public class Punishment {
     public static class Log {
 
         private final String id;
-        private final String relatedId;
+        private String relatedId;
         private final LogType logType;
-        private final String target;
-        private final String reason;
-        private final String initiator;
-        private final String date;
+        private String target;
+        private String reason;
+        private String initiator;
+        private String date;
 
     }
 
