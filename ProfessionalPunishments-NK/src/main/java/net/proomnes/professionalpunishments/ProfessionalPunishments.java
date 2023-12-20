@@ -10,6 +10,7 @@ import net.proomnes.professionalpunishments.services.BanService;
 import net.proomnes.professionalpunishments.services.DataService;
 import net.proomnes.professionalpunishments.services.MuteService;
 import net.proomnes.professionalpunishments.services.WarningService;
+import net.proomnes.professionalpunishments.util.messages.MessageLoader;
 import net.proomnes.professionalpunishments.util.tasks.UpdateDataTask;
 
 import java.text.DateFormat;
@@ -28,6 +29,8 @@ public class ProfessionalPunishments extends PluginBase {
     private MuteService muteService;
     private WarningService warningService;
     private DataService dataService;
+
+    private MessageLoader messageLoader;
 
     @Override
     public void onLoad() {
@@ -65,6 +68,7 @@ public class ProfessionalPunishments extends PluginBase {
 
     private void loadPlugin() {
         // utils
+        this.messageLoader = new MessageLoader(this);
 
         // services
         this.banService = new BanService(this);
@@ -80,7 +84,7 @@ public class ProfessionalPunishments extends PluginBase {
 
         // tasks
         final int interval = this.getConfig().getInt("settings.update-interval");
-        this.getServer().getScheduler().scheduleDelayedRepeatingTask(new UpdateDataTask(this), interval * 60, interval * 60, true);
+        if (!(interval == 0)) this.getServer().getScheduler().scheduleDelayedRepeatingTask(new UpdateDataTask(this), interval * 60, interval * 60, true);
     }
 
     @Override
