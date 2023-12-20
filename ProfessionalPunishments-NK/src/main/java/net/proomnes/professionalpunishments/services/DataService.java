@@ -1,9 +1,13 @@
 package net.proomnes.professionalpunishments.services;
 
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
+import net.proomnes.professionalpunishments.events.PunishmentChangeEvent;
+import net.proomnes.professionalpunishments.events.PunishmentLogDeleteEvent;
+import net.proomnes.professionalpunishments.events.PunishmentLogInsertEvent;
 import net.proomnes.professionalpunishments.objects.Punishment;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -48,6 +52,7 @@ public class DataService {
                 .peek(log -> log.setReason(reason)).toList();
 
         this.professionalPunishments.getDataAccess().setPunishmentReason(punishment, reason);
+        this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentChangeEvent(punishment, reason, PunishmentChangeEvent.ChangeType.REASON));
     }
 
     public void setPunishmentEnding(final Punishment punishment, final int minutes) {
@@ -65,6 +70,7 @@ public class DataService {
         }
 
         this.professionalPunishments.getDataAccess().setPunishmentEnding(punishment, minutes);
+        this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentChangeEvent(punishment, expire, PunishmentChangeEvent.ChangeType.EXPIRATION));
     }
 
     public void getPunishment(final String id, final Consumer<Punishment> punishmentConsumer) {
@@ -74,6 +80,8 @@ public class DataService {
     public void insertLog(final Punishment.Log log) {
         this.professionalPunishments.getDataService().insertLog(log);
         this.cachedLogs.add(log);
+
+        this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentLogInsertEvent(log));
     }
 
     public void getLogs(final String target, final Punishment.LogType type, final Consumer<Set<Punishment.Log>> punishmentConsumer) {
@@ -97,6 +105,8 @@ public class DataService {
     public void deleteLogEntry(final String id) {
         this.professionalPunishments.getDataService().deleteLogEntry(id);
         this.cachedLogs.removeIf(log -> log.getId().equals(id));
+
+        this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentLogDeleteEvent(id));
     }
 
 }

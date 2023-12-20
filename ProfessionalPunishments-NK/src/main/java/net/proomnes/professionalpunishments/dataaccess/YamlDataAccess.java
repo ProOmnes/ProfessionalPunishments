@@ -50,8 +50,6 @@ public class YamlDataAccess implements IDataAccess {
         this.bans.save();
         this.bans.reload();
 
-        this.insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "BL"), generatedId, Punishment.LogType.LOG_BAN, target, reason, initiator, date));
-
         id.accept(generatedId);
     }
 
@@ -82,8 +80,6 @@ public class YamlDataAccess implements IDataAccess {
         this.getBan(target, punishment -> {
             // get active ban and inserting unban log
             final String generatedId = this.professionalPunishments.getRandomId(5, "UBL");
-            final String date = this.professionalPunishments.getDate();
-            this.insertLog(new Punishment.Log(generatedId, punishment.getId(), Punishment.LogType.LOG_UNBAN, target, reason, initiator, date));
 
             // delete active ban
             final Map<String, Object> objectMap = this.bans.getSection("ban." + punishment.getId()).getAllMap();
@@ -118,8 +114,6 @@ public class YamlDataAccess implements IDataAccess {
         this.mutes.save();
         this.mutes.reload();
 
-        this.insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "ML"), generatedId, Punishment.LogType.LOG_MUTE, target, reason, initiator, date));
-
         id.accept(generatedId);
     }
 
@@ -148,10 +142,7 @@ public class YamlDataAccess implements IDataAccess {
     @Override
     public void unmutePlayer(String target, String initiator, String reason, Consumer<String> id) {
         this.getMute(target, punishment -> {
-            // get active mute and inserting unmute log
             final String generatedId = this.professionalPunishments.getRandomId(5, "UML");
-            final String date = this.professionalPunishments.getDate();
-            this.insertLog(new Punishment.Log(generatedId, punishment.getId(), Punishment.LogType.LOG_UNMUTE, target, reason, initiator, date));
 
             // delete active mute
             final Map<String, Object> objectMap = this.mutes.getSection("mute." + punishment.getId()).getAllMap();
@@ -185,8 +176,6 @@ public class YamlDataAccess implements IDataAccess {
         this.warnings.set("warning." + generatedId + ".expire", expire);
         this.warnings.save();
         this.warnings.reload();
-
-        this.insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "WL"), generatedId, Punishment.LogType.LOG_WARNING, target, reason, initiator, date));
 
         id.accept(generatedId);
     }
@@ -248,10 +237,7 @@ public class YamlDataAccess implements IDataAccess {
      */
     @Override
     public void unwarnPlayer(String target, String warnId, String initiator, String reason, Consumer<String> id) {
-        // get active warning and inserting unwarn log
         final String generatedId = this.professionalPunishments.getRandomId(5, "UWL");
-        final String date = this.professionalPunishments.getDate();
-        this.insertLog(new Punishment.Log(generatedId, warnId, Punishment.LogType.LOG_WARNING, target, reason, initiator, date));
 
         // delete active warning
         final Map<String, Object> objectMap = this.warnings.getSection("warning." + warnId).getAllMap();

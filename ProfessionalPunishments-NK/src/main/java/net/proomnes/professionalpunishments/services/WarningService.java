@@ -1,6 +1,8 @@
 package net.proomnes.professionalpunishments.services;
 
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
+import net.proomnes.professionalpunishments.events.PunishmentAbortEvent;
+import net.proomnes.professionalpunishments.events.PunishmentInitiateEvent;
 import net.proomnes.professionalpunishments.objects.Punishment;
 
 import java.util.HashMap;
@@ -29,7 +31,10 @@ public class WarningService {
             this.getWarning(id, punishment -> {
                 this.cachedWarnings.put(id, punishment);
 
-                // call event
+                this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentInitiateEvent(punishment, id, initiator));
+
+                // inserting warning log
+                this.professionalPunishments.getDataService().insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "WL"), id, Punishment.LogType.LOG_WARNING, target, reason, initiator, punishment.getDate()));
             });
         });
     }
@@ -41,7 +46,9 @@ public class WarningService {
                     this.professionalPunishments.getDataAccess().unwarnPlayer(target, warnId, initiator, reason, id -> {
                         this.cachedWarnings.remove(punishment.getId());
 
-                        // call event
+                        this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentAbortEvent(punishment, target, initiator, reason, id));
+
+                        this.professionalPunishments.getDataService().insertLog(new Punishment.Log(id, punishment.getId(), Punishment.LogType.LOG_WARNING, target, reason, initiator, this.professionalPunishments.getDate()));
                     });
                 } else {
                     this.cachedWarnings.remove(punishment.getId());

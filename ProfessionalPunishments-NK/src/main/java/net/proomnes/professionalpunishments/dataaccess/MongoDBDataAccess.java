@@ -72,9 +72,6 @@ public class MongoDBDataAccess implements IDataAccess {
 
             this.banCollection.insertOne(document);
 
-            // inserting ban log
-            this.insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "BL"), generatedId, Punishment.LogType.LOG_BAN, target, reason, initiator, date));
-
             id.accept(generatedId);
         });
     }
@@ -100,10 +97,7 @@ public class MongoDBDataAccess implements IDataAccess {
     public void unbanPlayer(String target, String initiator, String reason, Consumer<String> id) {
         CompletableFuture.runAsync(() -> {
             this.getBan(target, punishment -> {
-                // get active ban and inserting unban log
                 final String generatedId = this.professionalPunishments.getRandomId(5, "UBL");
-                final String date = this.professionalPunishments.getDate();
-                this.insertLog(new Punishment.Log(generatedId, punishment.getId(), Punishment.LogType.LOG_UNBAN, target, reason, initiator, date));
 
                 // delete active ban
                 this.banCollection.deleteOne(new Document("_id", punishment.getId()));
@@ -149,9 +143,6 @@ public class MongoDBDataAccess implements IDataAccess {
 
             this.muteCollection.insertOne(document);
 
-            // inserting mute log
-            this.insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "ML"), generatedId, Punishment.LogType.LOG_MUTE, target, reason, initiator, date));
-
             id.accept(generatedId);
         });
     }
@@ -177,10 +168,7 @@ public class MongoDBDataAccess implements IDataAccess {
     public void unmutePlayer(String target, String initiator, String reason, Consumer<String> id) {
         CompletableFuture.runAsync(() -> {
             this.getMute(target, punishment -> {
-                // get active ban and inserting unban log
                 final String generatedId = this.professionalPunishments.getRandomId(5, "UML");
-                final String date = this.professionalPunishments.getDate();
-                this.insertLog(new Punishment.Log(generatedId, punishment.getId(), Punishment.LogType.LOG_UNMUTE, target, reason, initiator, date));
 
                 // delete active ban
                 this.muteCollection.deleteOne(new Document("_id", punishment.getId()));
@@ -223,9 +211,6 @@ public class MongoDBDataAccess implements IDataAccess {
             );
 
             this.warningCollection.insertOne(document);
-
-            // inserting warning log
-            this.insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "WL"), generatedId, Punishment.LogType.LOG_WARNING, target, reason, initiator, date));
 
             id.accept(generatedId);
         });
@@ -294,10 +279,7 @@ public class MongoDBDataAccess implements IDataAccess {
     public void unwarnPlayer(String target, String warnId, String initiator, String reason, Consumer<String> id) {
         CompletableFuture.runAsync(() -> {
             this.getPunishment(warnId, punishment -> {
-                // get active warning and inserting unwarn log
                 final String generatedId = this.professionalPunishments.getRandomId(5, "UWL");
-                final String date = this.professionalPunishments.getDate();
-                this.insertLog(new Punishment.Log(generatedId, punishment.getId(), Punishment.LogType.LOG_WARNING, target, reason, initiator, date));
 
                 // delete active warning
                 this.muteCollection.deleteOne(new Document("_id", punishment.getId()));

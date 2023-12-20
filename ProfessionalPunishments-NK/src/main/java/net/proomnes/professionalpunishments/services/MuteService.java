@@ -1,6 +1,8 @@
 package net.proomnes.professionalpunishments.services;
 
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
+import net.proomnes.professionalpunishments.events.PunishmentAbortEvent;
+import net.proomnes.professionalpunishments.events.PunishmentInitiateEvent;
 import net.proomnes.professionalpunishments.objects.Punishment;
 
 import java.util.HashMap;
@@ -28,7 +30,10 @@ public class MuteService {
             this.getMute(target, punishment -> {
                 this.cachedMutes.put(id, punishment);
 
-                // call event
+                this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentInitiateEvent(punishment, id, initiator));
+
+                // inserting mute log
+                this.professionalPunishments.getDataService().insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "ML"), id, Punishment.LogType.LOG_MUTE, target, reason, initiator, punishment.getDate()));
             });
         });
     }
@@ -56,7 +61,9 @@ public class MuteService {
                     this.professionalPunishments.getDataAccess().unmutePlayer(target, initiator, reason, id -> {
                         this.cachedMutes.remove(punishment.getId());
 
-                        // call event
+                        this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentAbortEvent(punishment, target, initiator, reason, id));
+
+                        this.professionalPunishments.getDataService().insertLog(new Punishment.Log(id, punishment.getId(), Punishment.LogType.LOG_UNMUTE, target, reason, initiator, this.professionalPunishments.getDate()));
                     });
                 } else {
                     this.cachedMutes.remove(punishment.getId());
