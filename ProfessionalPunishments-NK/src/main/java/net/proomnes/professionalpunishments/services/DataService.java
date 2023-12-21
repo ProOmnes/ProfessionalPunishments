@@ -36,13 +36,25 @@ public class DataService {
     public void setPunishmentReason(final Punishment punishment, final String reason) {
         switch (punishment.getType()) {
             case PUNISHMENT_BAN -> {
-                this.professionalPunishments.getBanService().cachedBans.get(punishment.getId()).setReason(reason);
+                this.professionalPunishments.getBanService().cachedBans
+                        .stream()
+                        .filter(entry -> entry.getId().equals(punishment.getId()))
+                        .peek(entry -> entry.setReason(reason))
+                        .toList();
             }
             case PUNISHMENT_MUTE -> {
-                this.professionalPunishments.getMuteService().cachedMutes.get(punishment.getId()).setReason(reason);
+                this.professionalPunishments.getMuteService().cachedMutes
+                        .stream()
+                        .filter(entry -> entry.getId().equals(punishment.getId()))
+                        .peek(entry -> entry.setReason(reason))
+                        .toList();
             }
             case PUNISHMENT_WARNING -> {
-                this.professionalPunishments.getWarningService().cachedWarnings.get(punishment.getId()).setReason(reason);
+                this.professionalPunishments.getWarningService().cachedWarnings
+                        .stream()
+                        .filter(entry -> entry.getId().equals(punishment.getId()))
+                        .peek(entry -> entry.setReason(reason))
+                        .toList();
             }
         }
 
@@ -59,13 +71,25 @@ public class DataService {
         final long expire = System.currentTimeMillis() + (minutes * 60000L);
         switch (punishment.getType()) {
             case PUNISHMENT_BAN -> {
-                this.professionalPunishments.getBanService().cachedBans.get(punishment.getId()).setExpire(expire);
+                this.professionalPunishments.getBanService().cachedBans
+                        .stream()
+                        .filter(entry -> entry.getId().equals(punishment.getId()))
+                        .peek(entry -> entry.setExpire(expire))
+                        .toList();
             }
             case PUNISHMENT_MUTE -> {
-                this.professionalPunishments.getMuteService().cachedMutes.get(punishment.getId()).setExpire(expire);
+                this.professionalPunishments.getMuteService().cachedMutes
+                        .stream()
+                        .filter(entry -> entry.getId().equals(punishment.getId()))
+                        .peek(entry -> entry.setExpire(expire))
+                        .toList();
             }
             case PUNISHMENT_WARNING -> {
-                this.professionalPunishments.getWarningService().cachedWarnings.get(punishment.getId()).setExpire(expire);
+                this.professionalPunishments.getWarningService().cachedWarnings
+                        .stream()
+                        .filter(entry -> entry.getId().equals(punishment.getId()))
+                        .peek(entry -> entry.setExpire(expire))
+                        .toList();
             }
         }
 

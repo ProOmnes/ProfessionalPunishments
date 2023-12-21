@@ -5,31 +5,28 @@ import net.proomnes.professionalpunishments.events.PunishmentAbortEvent;
 import net.proomnes.professionalpunishments.events.PunishmentInitiateEvent;
 import net.proomnes.professionalpunishments.objects.Punishment;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class WarningService {
 
     private final ProfessionalPunishments professionalPunishments;
-    public final Map<String, Punishment> cachedWarnings = new HashMap<>();
+    public final Set<Punishment> cachedWarnings = new HashSet<>();
 
     public WarningService(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
 
-        this.professionalPunishments.getDataAccess().getAllActiveWarnings(punishmentSet -> {
-            punishmentSet.forEach(punishment -> {
-                this.cachedWarnings.put(punishment.getId(), punishment);
-            });
-        });
+        this.professionalPunishments.getDataAccess().getAllActiveWarnings(this.cachedWarnings::addAll);
     }
 
     public void warnPlayer(final String target, final String reason, final String initiator, final int minutes) {
         this.professionalPunishments.getDataAccess().warnPlayer(target, reason, initiator, minutes, id -> {
             this.getWarning(id, punishment -> {
-                this.cachedWarnings.put(id, punishment);
+                this.cachedWarnings.add(punishment);
 
                 this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentInitiateEvent(punishment, id, initiator));
 
@@ -44,14 +41,14 @@ public class WarningService {
             this.professionalPunishments.getDataAccess().punishmentIdExists(warnId, Punishment.Type.PUNISHMENT_WARNING, is -> {
                 if (is) {
                     this.professionalPunishments.getDataAccess().unwarnPlayer(target, warnId, initiator, reason, id -> {
-                        this.cachedWarnings.remove(punishment.getId());
+                        this.cachedWarnings.removeIf(warning -> warning.getId().equals(punishment.getId()));
 
                         this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentAbortEvent(punishment, target, initiator, reason, id));
 
                         this.professionalPunishments.getDataService().insertLog(new Punishment.Log(id, punishment.getId(), Punishment.LogType.LOG_WARNING, target, reason, initiator, this.professionalPunishments.getDate()));
                     });
                 } else {
-                    this.cachedWarnings.remove(punishment.getId());
+                    this.cachedWarnings.removeIf(warning -> warning.getId().equals(punishment.getId()));
                 }
             });
         });
@@ -60,12 +57,21 @@ public class WarningService {
     public void getWarning(final String id, final Consumer<Punishment> punishment) {
         final AtomicReference<Punishment> punishmentReference = new AtomicReference<>(null);
 
-        if (this.cachedWarnings.containsKey(id)) punishmentReference.set(this.cachedWarnings.get(id));
+        try {
+            punishmentReference.set(this.cachedWarnings
+                    .stream()
+                    .filter(ban -> ban.getId().equals(id))
+                    .findFirst()
+                    .get()
+            );
+        } catch (final NoSuchElementException exception) {
+            punishmentReference.set(null);
+        }
 
         if (punishmentReference.get() == null) {
             this.professionalPunishments.getDataAccess().getPunishment(id, punishmentQuery -> {
                 punishment.accept(punishmentQuery);
-                this.cachedWarnings.put(punishmentQuery.getId(), punishmentQuery);
+                this.cachedWarnings.add(punishmentQuery);
             });
         } else {
             punishment.accept(punishmentReference.get());
@@ -73,14 +79,11 @@ public class WarningService {
     }
 
     public void getActiveWarnings(final String target, final Consumer<Set<Punishment>> punishments) {
-        this.professionalPunishments.getDataAccess().getActiveWarnings(target, punishmentQuery -> {
-            punishmentQuery.forEach(punishment -> {
-                if (!this.cachedWarnings.containsKey(punishment.getId())) {
-                    this.cachedWarnings.put(punishment.getId(), punishment);
-                }
-            });
-            punishments.accept(punishmentQuery);
-        });
+        punishments.accept(this.cachedWarnings
+                .stream()
+                .filter(punishment -> punishment.getTarget().equals(target))
+                .collect(Collectors.toSet())
+        );
     }
 
 }

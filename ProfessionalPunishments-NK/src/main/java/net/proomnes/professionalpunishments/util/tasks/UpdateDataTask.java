@@ -11,6 +11,8 @@ public class UpdateDataTask extends Task {
 
     private final ProfessionalPunishments professionalPunishments;
 
+    // TODO: 21.12.2023 check if all players are kicked if they are banned on update
+
     @Override
     public void onRun(int i) {
         CompletableFuture.runAsync(() -> {
@@ -18,7 +20,7 @@ public class UpdateDataTask extends Task {
             this.professionalPunishments.getBanService().cachedBans.clear();
             this.professionalPunishments.getDataAccess().getAllBans(punishmentSet -> {
                 punishmentSet.forEach(punishment -> {
-                    this.professionalPunishments.getBanService().cachedBans.put(punishment.getId(), punishment);
+                    this.professionalPunishments.getBanService().cachedBans.add(punishment);
                 });
             });
 
@@ -26,7 +28,7 @@ public class UpdateDataTask extends Task {
             this.professionalPunishments.getMuteService().cachedMutes.clear();
             this.professionalPunishments.getDataAccess().getAllMutes(punishmentSet -> {
                 punishmentSet.forEach(punishment -> {
-                    this.professionalPunishments.getMuteService().cachedMutes.put(punishment.getId(), punishment);
+                    this.professionalPunishments.getMuteService().cachedMutes.add(punishment);
                 });
             });
 
@@ -34,7 +36,7 @@ public class UpdateDataTask extends Task {
             this.professionalPunishments.getWarningService().cachedWarnings.clear();
             this.professionalPunishments.getDataAccess().getAllActiveWarnings(punishmentSet -> {
                 punishmentSet.forEach(punishment -> {
-                    this.professionalPunishments.getWarningService().cachedWarnings.put(punishment.getId(), punishment);
+                    this.professionalPunishments.getWarningService().cachedWarnings.add(punishment);
                 });
             });
         });
