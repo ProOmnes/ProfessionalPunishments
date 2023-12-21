@@ -9,6 +9,8 @@ public enum MessageKeys {
       SYSTEM MESSAGES
      */
     SYSTEM_PREFIX("system.prefix", "§8» §bPunishments §8| §7", false),
+    SYSTEM_PLAYER_BANNED("system.player.banned", "", false),
+    SYSTEM_PLAYER_MUTED("system.player.muted", "", false),
 
     /*
       PLUGIN MESSAGES

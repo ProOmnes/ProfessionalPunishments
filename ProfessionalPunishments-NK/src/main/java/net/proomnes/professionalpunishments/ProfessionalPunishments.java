@@ -6,6 +6,7 @@ import net.proomnes.professionalpunishments.dataaccess.IDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.MongoDBDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.MySQLDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.YamlDataAccess;
+import net.proomnes.professionalpunishments.listeners.EventListener;
 import net.proomnes.professionalpunishments.services.BanService;
 import net.proomnes.professionalpunishments.services.DataService;
 import net.proomnes.professionalpunishments.services.MuteService;
@@ -79,6 +80,7 @@ public class ProfessionalPunishments extends PluginBase {
         // api
 
         // listeners
+        this.getServer().getPluginManager().registerEvents(new EventListener(this), this);
 
         // commands
 
@@ -117,5 +119,30 @@ public class ProfessionalPunishments extends PluginBase {
         final Date now = new Date();
         final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         return dateFormat.format(now);
+    }
+
+    public String getRemainingTime(long duration) {
+        if (duration == -1L) {
+            return "Permanent";
+        }
+
+        long time = duration - System.currentTimeMillis();
+        int days = (int) (time / 86400000L);
+        int hours = (int) (time / 3600000L % 24L);
+        int minutes = (int) (time / 60000L % 60L);
+
+        String day = (days == 1) ? "Day" : "Days";
+        String hour = (hours == 1) ? "Hour" : "Hours";
+        String minute = (minutes == 1) ? "Minute" : "Minutes";
+
+        if (minutes < 1 && days == 0 && hours == 0) {
+            return "Some seconds";
+        } else if (hours == 0 && days == 0) {
+            return minutes + " " + minute;
+        } else {
+            return (days == 0) ? hours + " " + hour + " " + minutes + " " + minute :
+                    days + " " + day + " " + hours + " " + hour + " " + minutes + " " + minute;
+        }
+    }
     }
 }
