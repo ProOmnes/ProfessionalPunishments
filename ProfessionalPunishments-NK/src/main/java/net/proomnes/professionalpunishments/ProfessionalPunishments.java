@@ -144,5 +144,5 @@ public class ProfessionalPunishments extends PluginBase {
                     days + " " + day + " " + hours + " " + hour + " " + minutes + " " + minute;
         }
     }
-    }
+
 }
