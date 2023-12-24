@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public class YamlDataAccess implements IDataAccess {
 
     private final ProfessionalPunishments professionalPunishments;
-    private Config bans, mutes, warnings, logs;
+    private final Config bans, mutes, warnings, logs;
 
     public YamlDataAccess(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
@@ -23,9 +23,9 @@ public class YamlDataAccess implements IDataAccess {
         professionalPunishments.saveResource("/data/warnings.yml");
         professionalPunishments.saveResource("/data/logs.yml");
         this.bans = new Config(professionalPunishments.getDataFolder() + "/data/bans.yml", Config.YAML);
-        this.bans = new Config(professionalPunishments.getDataFolder() + "/data/mutes.yml", Config.YAML);
-        this.bans = new Config(professionalPunishments.getDataFolder() + "/data/warnings.yml", Config.YAML);
-        this.bans = new Config(professionalPunishments.getDataFolder() + "/data/logs.yml", Config.YAML);
+        this.mutes = new Config(professionalPunishments.getDataFolder() + "/data/mutes.yml", Config.YAML);
+        this.warnings = new Config(professionalPunishments.getDataFolder() + "/data/warnings.yml", Config.YAML);
+        this.logs = new Config(professionalPunishments.getDataFolder() + "/data/logs.yml", Config.YAML);
     }
 
     /**
