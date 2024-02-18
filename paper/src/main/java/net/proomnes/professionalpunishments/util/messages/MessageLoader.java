@@ -1,7 +1,7 @@
 package net.proomnes.professionalpunishments.util.messages;
 
-import cn.nukkit.plugin.PluginBase;
-import cn.nukkit.utils.Config;
+import net.proomnes.configutils.Config;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,12 +10,12 @@ public class MessageLoader {
 
     private final Map<String, String> cachedMessages = new HashMap<>();
 
-    public MessageLoader(final PluginBase pluginBase) {
-        pluginBase.saveResource("lang/" + pluginBase.getConfig().getString("settings.lang") + ".yml");
-        pluginBase.saveResource("lang/en-us.yml");
-        pluginBase.saveResource("lang/de-de.yml");
+    public MessageLoader(final JavaPlugin plugin) {
+        Config.saveResource("lang/" + plugin.getConfig().getString("settings.lang") + ".yml", plugin);
+        Config.saveResource("lang/en-us.yml", plugin);
+        Config.saveResource("lang/de-de.yml", plugin);
 
-        final Config config = new Config(pluginBase.getDataFolder() + "/lang/" + pluginBase.getConfig().getString("settings.lang") + ".yml", Config.YAML);
+        final Config config = new Config(plugin.getDataFolder() + "/lang/" + plugin.getConfig().getString("settings.lang") + ".yml", Config.YAML);
         config.getAll().forEach((key, value) -> {
             if (value instanceof String) {
                 this.cachedMessages.put(key, (String) value);

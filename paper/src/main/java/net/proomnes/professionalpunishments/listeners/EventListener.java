@@ -1,14 +1,16 @@
 package net.proomnes.professionalpunishments.listeners;
 
-import cn.nukkit.Player;
-import cn.nukkit.event.EventHandler;
-import cn.nukkit.event.Listener;
-import cn.nukkit.event.player.PlayerChatEvent;
-import cn.nukkit.event.player.PlayerPreLoginEvent;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import lombok.AllArgsConstructor;
+import net.kyori.adventure.text.Component;
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
 import net.proomnes.professionalpunishments.objects.Punishment;
 import net.proomnes.professionalpunishments.util.messages.MessageKeys;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerPreLoginEvent;
 
 @AllArgsConstructor
 public class EventListener implements Listener {
@@ -17,12 +19,12 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void on(final PlayerPreLoginEvent event) {
-        final Player player = event.getPlayer();
+        final Player player = (Player) event.getAddress();
 
         // check if player is banned
         this.professionalPunishments.getBanService().isBanned(player.getName(), is -> {
             if (is) {
-                this.professionalPunishments.getServer().getScheduler().scheduleDelayedTask(this.professionalPunishments, () -> {
+                this.professionalPunishments.getServer().getScheduler().scheduleSyncDelayedTask(this.professionalPunishments, () -> {
                     // get active ban
                     this.professionalPunishments.getBanService().getBan(player.getName(), punishment -> {
                         // check if this punishment is not permanently
@@ -35,9 +37,9 @@ public class EventListener implements Listener {
                             }
 
                             // if not reached, kick the player
-                            player.kick(this.professionalPunishments.getMessageLoader().get(
+                            player.kick(Component.text(this.professionalPunishments.getMessageLoader().get(
                                     MessageKeys.SYSTEM_PLAYER_BANNED, punishment.getId(), punishment.getReason(), punishment.getInitiator(), punishment.getDate(), this.professionalPunishments.getRemainingTime(punishment.getExpire()
-                                    )), false);
+                                    ))), PlayerKickEvent.Cause.UNKNOWN);
                         }
                     });
                 }, 45);
@@ -46,7 +48,7 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void on(final PlayerChatEvent event) {
+    public void on(final AsyncChatEvent event) {
         final Player player = event.getPlayer();
 
         if (this.professionalPunishments.getMuteService().cachedMutes

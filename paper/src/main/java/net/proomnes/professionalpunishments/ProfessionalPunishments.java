@@ -1,7 +1,7 @@
 package net.proomnes.professionalpunishments;
 
-import cn.nukkit.plugin.PluginBase;
 import lombok.Getter;
+import net.proomnes.professionalpunishments.commands.ban.TempbanCommand;
 import net.proomnes.professionalpunishments.dataaccess.IDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.MongoDBDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.MySQLDataAccess;
@@ -13,6 +13,7 @@ import net.proomnes.professionalpunishments.services.MuteService;
 import net.proomnes.professionalpunishments.services.WarningService;
 import net.proomnes.professionalpunishments.util.messages.MessageLoader;
 import net.proomnes.professionalpunishments.util.tasks.UpdateDataTask;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Getter
-public class ProfessionalPunishments extends PluginBase {
+public class ProfessionalPunishments extends JavaPlugin {
 
     private IDataAccess dataAccess;
 
@@ -62,7 +63,7 @@ public class ProfessionalPunishments extends PluginBase {
                 this.dataAccess = new MySQLDataAccess(this);
                 break;
             default:
-                this.getLogger().error("§4[ProfessionalPunishments] Please specify a valid provider: 'Yaml', 'MySQL', 'MongoDB'.");
+                this.getLogger().info("§4[ProfessionalPunishments] Please specify a valid provider: 'Yaml', 'MySQL', 'MongoDB'.");
                 break;
         }
     }
@@ -83,10 +84,16 @@ public class ProfessionalPunishments extends PluginBase {
         this.getServer().getPluginManager().registerEvents(new EventListener(this), this);
 
         // commands
+        this.getServer().getCommandMap().register("professionalpunishments", new TempbanCommand(this));
 
         // tasks
         final int interval = this.getConfig().getInt("settings.update-interval");
-        if (!(interval == 0)) this.getServer().getScheduler().scheduleDelayedRepeatingTask(new UpdateDataTask(this), interval * 60, interval * 60, true);
+        if (!(interval == 0)) this.getServer().getScheduler().runTaskTimerAsynchronously(this, new UpdateDataTask(this), interval * 60L, interval * 60L);
+
+        this.getLogger().info("[ProfessionalPunishments] Plugin loaded and enabled.");
+        this.getLogger().info("[ProfessionalPunishments] ProfessionalPunishments is a moderation tool for server staff.");
+        this.getLogger().info("[ProfessionalPunishments] This plugin was developed by Jan Pretzer.");
+        this.getLogger().info("[ProfessionalPunishments] Have fun using this plugin!");
     }
 
     @Override
@@ -95,7 +102,7 @@ public class ProfessionalPunishments extends PluginBase {
     }
 
     public String getRandomId(final int length) {
-        final String chars = "abcdefgxyz1234567890";
+        final String chars = "abcdefgrqpxyz1234567890";
         final StringBuilder stringBuilder = new StringBuilder();
         final Random rnd = new Random();
         while (stringBuilder.length() < length) {

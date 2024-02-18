@@ -1,20 +1,30 @@
 package net.proomnes.professionalpunishments.util.tasks;
 
-import cn.nukkit.scheduler.Task;
 import lombok.AllArgsConstructor;
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
 
 import java.util.concurrent.CompletableFuture;
 
 @AllArgsConstructor
-public class UpdateDataTask extends Task {
+public class UpdateDataTask implements Runnable {
 
     private final ProfessionalPunishments professionalPunishments;
 
     // TODO: 21.12.2023 check if all players are kicked if they are banned on update
 
+    /**
+     * When an object implementing interface {@code Runnable} is used
+     * to create a thread, starting the thread causes the object's
+     * {@code run} method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method {@code run} is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
     @Override
-    public void onRun(int i) {
+    public void run() {
         CompletableFuture.runAsync(() -> {
             // update ban data
             this.professionalPunishments.getBanService().cachedBans.clear();
