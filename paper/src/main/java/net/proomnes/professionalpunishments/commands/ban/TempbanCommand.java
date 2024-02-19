@@ -20,15 +20,9 @@ public class TempbanCommand extends Command {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String commandLabel, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
         if (!this.testPermission(sender)) return true;
-        if (sender instanceof Player player) {
-            if (args.length == 1) {
 
-            } else {
-
-            }
-        }
         return true;
     }
 }

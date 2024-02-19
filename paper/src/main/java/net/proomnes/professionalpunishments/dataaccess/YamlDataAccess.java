@@ -1,6 +1,6 @@
 package net.proomnes.professionalpunishments.dataaccess;
 
-import cn.nukkit.utils.Config;
+import net.proomnes.configutils.Config;
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
 import net.proomnes.professionalpunishments.objects.Punishment;
 
@@ -18,10 +18,10 @@ public class YamlDataAccess implements IDataAccess {
     public YamlDataAccess(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
 
-        professionalPunishments.saveResource("/data/bans.yml");
-        professionalPunishments.saveResource("/data/mutes.yml");
-        professionalPunishments.saveResource("/data/warnings.yml");
-        professionalPunishments.saveResource("/data/logs.yml");
+        Config.saveResource("/data/bans.yml", professionalPunishments);
+        Config.saveResource("/data/mutes.yml", professionalPunishments);
+        Config.saveResource("/data/warnings.yml", professionalPunishments);
+        Config.saveResource("/data/logs.yml", professionalPunishments);
         this.bans = new Config(professionalPunishments.getDataFolder() + "/data/bans.yml", Config.YAML);
         this.mutes = new Config(professionalPunishments.getDataFolder() + "/data/mutes.yml", Config.YAML);
         this.warnings = new Config(professionalPunishments.getDataFolder() + "/data/warnings.yml", Config.YAML);
