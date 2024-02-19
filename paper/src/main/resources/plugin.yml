@@ -1,6 +1,6 @@
 name: ProfessionalPunishments
 version: 1.0.0-SNAPSHOT
-api: 1.0.0
+api-version: 1.20
 author: Jan Pretzer
 description: ProfessionalPunishments is a professional punishment system with bans, mutes and warnings for Minecraft.
 main: net.proomnes.professionalpunishments.ProfessionalPunishments

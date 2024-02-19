@@ -1,7 +1,11 @@
 package net.proomnes.professionalpunishments.util.tasks;
 
 import lombok.AllArgsConstructor;
+import net.kyori.adventure.text.Component;
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
+import net.proomnes.professionalpunishments.util.messages.MessageKeys;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerKickEvent;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -9,8 +13,6 @@ import java.util.concurrent.CompletableFuture;
 public class UpdateDataTask implements Runnable {
 
     private final ProfessionalPunishments professionalPunishments;
-
-    // TODO: 21.12.2023 check if all players are kicked if they are banned on update
 
     /**
      * When an object implementing interface {@code Runnable} is used
@@ -31,6 +33,13 @@ public class UpdateDataTask implements Runnable {
             this.professionalPunishments.getDataAccess().getAllBans(punishmentSet -> {
                 punishmentSet.forEach(punishment -> {
                     this.professionalPunishments.getBanService().cachedBans.add(punishment);
+
+                    if (punishment.targetIsOnline()) {
+                        final Player player = this.professionalPunishments.getServer().getPlayer(punishment.getTarget());
+                        player.kick(Component.text(this.professionalPunishments.getMessageLoader().get(
+                                MessageKeys.SYSTEM_PLAYER_BANNED, punishment.getId(), punishment.getReason(), punishment.getInitiator(), punishment.getDate(), this.professionalPunishments.getRemainingTime(punishment.getExpire()
+                                ))), PlayerKickEvent.Cause.UNKNOWN);
+                    }
                 });
             });
 

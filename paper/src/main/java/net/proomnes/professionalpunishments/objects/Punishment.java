@@ -3,6 +3,8 @@ package net.proomnes.professionalpunishments.objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 @AllArgsConstructor
 @Getter
@@ -17,6 +19,16 @@ public class Punishment {
     private String initiator;
     private String date;
     private long expire;
+
+    public boolean targetIsOnline() {
+        final Player player = Bukkit.getPlayer(this.target);
+        return player != null;
+    }
+
+    public boolean initiatorIsOnline() {
+        final Player player = Bukkit.getPlayer(this.initiator);
+        return player != null;
+    }
 
     @AllArgsConstructor
     @Getter
