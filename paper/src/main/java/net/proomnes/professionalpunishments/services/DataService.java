@@ -5,6 +5,7 @@ import net.proomnes.professionalpunishments.events.PunishmentChangeEvent;
 import net.proomnes.professionalpunishments.events.PunishmentLogDeleteEvent;
 import net.proomnes.professionalpunishments.events.PunishmentLogInsertEvent;
 import net.proomnes.professionalpunishments.objects.Punishment;
+import net.proomnes.professionalpunishments.objects.Reason;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,11 +16,27 @@ public class DataService {
 
     private final ProfessionalPunishments professionalPunishments;
     public final Set<Punishment.Log> cachedLogs = new HashSet<>();
+    public final Set<Reason> banPresets = new HashSet<>();
+    public final Set<Reason> mutePresets = new HashSet<>();
+    public final Set<Reason> warningPresets = new HashSet<>();
 
     public DataService(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
 
         this.professionalPunishments.getDataAccess().getAllLogs(this.cachedLogs::addAll);
+
+        this.professionalPunishments.getConfig().getStringList("presets.ban").forEach(entry -> {
+            final String[] presetData = entry.split(":");
+            this.banPresets.add(new Reason(presetData[0], presetData[1], Integer.parseInt(presetData[2])));
+        });
+        this.professionalPunishments.getConfig().getStringList("presets.mute").forEach(entry -> {
+            final String[] presetData = entry.split(":");
+            this.mutePresets.add(new Reason(presetData[0], presetData[1], Integer.parseInt(presetData[2])));
+        });
+        this.professionalPunishments.getConfig().getStringList("presets.warning").forEach(entry -> {
+            final String[] presetData = entry.split(":");
+            this.warningPresets.add(new Reason(presetData[0], presetData[1], Integer.parseInt(presetData[2])));
+        });
     }
 
     public void punishmentIdExists(final String id, final Punishment.Type type, final Consumer<Boolean> exists) {
