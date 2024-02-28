@@ -52,11 +52,66 @@ mysql:
 
 # Here you can edit all command names, descriptions, aliases and permissions.
 commands:
+  ban:
+    name: "ban"
+    description: "Ban a player temporarily for a certain reason."
+    aliases: [ "pban" ]
+    permission: "punishments.command.ban"
+  banlog:
+    name: "banlog"
+    description: "Get a history of all bans of this player."
+    aliases: [ "blog", "banhistory" ]
+    permission: "punishments.command.banlog"
+  checkban:
+    name: "checkban"
+    description: "Check if a player is banned and get more information."
+    aliases: [ "cban", "isbanned" ]
+    permission: "punishments.command.checkban"
+  editban:
+    name: "editban"
+    description: "Change the duration or the reason for a punishment."
+    aliases: [ "eban", "updateban" ]
+    permission: "punishments.command.editban"
   tempban:
     name: "tempban"
     description: "Ban a player temporarily for a certain reason."
     aliases: [ "tban", "timeban" ]
     permission: "punishments.command.tempban"
+  unban:
+    name: "unban"
+    description: "Cancel a punishment."
+    aliases: [ "uban", "cancelban", "removeban" ]
+    permission: "punishments.command.unban"
+  mute:
+    name: "mute"
+    description: "Mute a player temporarily for a certain reason."
+    aliases: [ "pmute" ]
+    permission: "punishments.command.mute"
+  mutelog:
+    name: "mutelog"
+    description: "Get a history of all mutes of this player."
+    aliases: [ "mlog", "mutehistory" ]
+    permission: "punishments.command.mutelog"
+  checkmute:
+    name: "checkmute"
+    description: "Check if a player is muted and get more information."
+    aliases: [ "cmute", "ismuted" ]
+    permission: "punishments.command.checkmute"
+  editmute:
+    name: "editmute"
+    description: "Change the duration or the reason for a punishment."
+    aliases: [ "emute", "updatemute" ]
+    permission: "punishments.command.editmute"
+  tempmute:
+    name: "tempmute"
+    description: "Mute a player temporarily for a certain reason."
+    aliases: [ "tmute", "timemute" ]
+    permission: "punishments.command.tempmute"
+  unmute:
+    name: "unmute"
+    description: "Cancel a punishment."
+    aliases: [ "umute", "cancelmute", "removemute" ]
+    permission: "punishments.command.unmute"
 
 # Do not edit the config version!
 version: 1

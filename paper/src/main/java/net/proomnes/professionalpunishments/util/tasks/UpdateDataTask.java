@@ -1,7 +1,6 @@
 package net.proomnes.professionalpunishments.util.tasks;
 
 import lombok.AllArgsConstructor;
-import net.kyori.adventure.text.Component;
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
 import net.proomnes.professionalpunishments.util.messages.MessageKeys;
 import org.bukkit.entity.Player;
@@ -36,9 +35,9 @@ public class UpdateDataTask implements Runnable {
 
                     if (punishment.targetIsOnline()) {
                         final Player player = this.professionalPunishments.getServer().getPlayer(punishment.getTarget());
-                        player.kick(Component.text(this.professionalPunishments.getMessageLoader().get(
-                                MessageKeys.SYSTEM_PLAYER_BANNED, punishment.getId(), punishment.getReason(), punishment.getInitiator(), punishment.getDate(), this.professionalPunishments.getRemainingTime(punishment.getExpire()
-                                ))), PlayerKickEvent.Cause.UNKNOWN);
+                        player.kick(this.professionalPunishments.getMessageLoader().get(
+                                MessageKeys.SYSTEM_SCREEN_BAN, punishment.getId(), punishment.getReason(), punishment.getInitiator(), punishment.getDate(), this.professionalPunishments.getRemainingTime(punishment.getExpire()
+                                )), PlayerKickEvent.Cause.UNKNOWN);
                     }
                 });
             });
