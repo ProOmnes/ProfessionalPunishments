@@ -1,5 +1,7 @@
 package net.proomnes.professionalpunishments.util.messages;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.proomnes.configutils.Config;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -9,8 +11,11 @@ import java.util.Map;
 public class MessageLoader {
 
     private final Map<String, String> cachedMessages = new HashMap<>();
+    private final MiniMessage miniMessage;
 
     public MessageLoader(final JavaPlugin plugin) {
+        this.miniMessage = MiniMessage.miniMessage();
+
         Config.saveResource("lang/" + plugin.getConfig().getString("settings.lang") + ".yml", plugin);
         Config.saveResource("lang/en-us.yml", plugin);
         Config.saveResource("lang/de-de.yml", plugin);
@@ -23,7 +28,7 @@ public class MessageLoader {
         });
     }
 
-    public String get(final MessageKeys messageKeys, final Object... toReplace) {
+    public Component get(final MessageKeys messageKeys, final Object... toReplace) {
         String message = this.cachedMessages.getOrDefault(messageKeys.getKey(), messageKeys.getDefaultMessage());
 
         if (messageKeys.isPrefix()) {
@@ -38,7 +43,7 @@ public class MessageLoader {
 
         message = message.replace("&", "§");
 
-        return message;
+        return miniMessage.deserialize(message);
     }
 
 }
