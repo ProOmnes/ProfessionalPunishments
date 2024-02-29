@@ -3,6 +3,7 @@ package net.proomnes.professionalpunishments;
 import lombok.Getter;
 import net.proomnes.professionalpunishments.commands.ban.*;
 import net.proomnes.professionalpunishments.commands.mute.*;
+import net.proomnes.professionalpunishments.commands.warning.*;
 import net.proomnes.professionalpunishments.dataaccess.IDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.MongoDBDataAccess;
 import net.proomnes.professionalpunishments.dataaccess.MySQLDataAccess;
@@ -102,9 +103,16 @@ public class ProfessionalPunishments extends JavaPlugin {
         this.getServer().getCommandMap().register("professionalpunishments", new TempmuteCommand(this));
         this.getServer().getCommandMap().register("professionalpunishments", new UnmuteCommand(this));
 
+        this.getServer().getCommandMap().register("professionalpunishments", new EditwarningCommand(this));
+        this.getServer().getCommandMap().register("professionalpunishments", new TempwarnCommand(this));
+        this.getServer().getCommandMap().register("professionalpunishments", new UnwarnCommand(this));
+        this.getServer().getCommandMap().register("professionalpunishments", new WarnCommand(this));
+        this.getServer().getCommandMap().register("professionalpunishments", new WarningsCommand(this));
+        this.getServer().getCommandMap().register("professionalpunishments", new WarnlogCommand(this));
+
         // tasks
         final int interval = this.getConfig().getInt("settings.update-interval");
-        if (!(interval == 0)) this.getServer().getScheduler().runTaskTimerAsynchronously(this, new UpdateDataTask(this), interval * 60L, interval * 60L);
+        if (!(interval <= 29)) this.getServer().getScheduler().runTaskTimerAsynchronously(this, new UpdateDataTask(this), interval * 60L, interval * 60L);
 
         this.getLogger().info("Plugin loaded and enabled.");
         this.getLogger().info("ProfessionalPunishments is a moderation tool for server staff.");

@@ -11,9 +11,17 @@ settings:
 
   # All data from this plugin is stored temporarily in a cache. To update this cache when something changes, there is an update interval.
   # Specify in seconds after how many seconds this cache should be updated.
-  # It is not recommended to set this value below 30 seconds due to possible performance issues.
+  # It is not possible to set this value below 30 seconds due to possible performance issues.
   # If you run this plugin on one single server: Set this value to '0' if you want to disable the update interval.
-  update-interval: 45
+  update-interval: 60
+
+  # Enable or disable the warning limit. If a player has more active warnings than the provided limit, the player will
+  # be automatically banned. Here you can specify the limit, the ban reason and duration.
+  warn-limit:
+    enable: true
+    limit: 5
+    ban-reason: "You reached the warning limit"
+    ban-minutes: 10080
 
 # In this section, you can define default values for reasons and durations of punishments.
 # -1 = Permanent
@@ -112,6 +120,36 @@ commands:
     description: "Cancel a punishment."
     aliases: [ "umute", "cancelmute", "removemute" ]
     permission: "punishments.command.unmute"
+  editwarning:
+    name: "editwarning"
+    description: "Change the duration or the reason for a warning."
+    aliases: [ "ewarn", "updatewarning" ]
+    permission: "punishments.command.editwarning"
+  tempwarn:
+    name: "tempwarn"
+    description: "Warn a player temporarily for a certain reason."
+    aliases: [ "twarn", "timewarn" ]
+    permission: "punishments.command.tempwarn"
+  unwarn:
+    name: "unwarn"
+    description: "Cancel a warning."
+    aliases: [ "uwarn", "cancelwarning", "removewarning" ]
+    permission: "punishments.command.unwarn"
+  warn:
+    name: "warn"
+    description: "Warn a player temporarily for a certain reason."
+    aliases: [ "pwarn" ]
+    permission: "punishments.command.warn"
+  warnings:
+    name: "warnings"
+    description: "Get all active warnings of this player."
+    aliases: [ "activewarnings", "aw" ]
+    permission: "punishments.command.warnings"
+  warnlog:
+    name: "warnlog"
+    description: "Get a history of all warnings of this player."
+    aliases: [ "wlog", "warninghistory" ]
+    permission: "punishments.command.warnlog"
 
 # Do not edit the config version!
 version: 1
