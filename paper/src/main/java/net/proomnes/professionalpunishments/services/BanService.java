@@ -5,6 +5,8 @@ import net.proomnes.professionalpunishments.ProfessionalPunishments;
 import net.proomnes.professionalpunishments.events.PunishmentAbortEvent;
 import net.proomnes.professionalpunishments.events.PunishmentInitiateEvent;
 import net.proomnes.professionalpunishments.objects.Punishment;
+import net.proomnes.professionalpunishments.util.messages.MessageKeys;
+import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.NoSuchElementException;
@@ -30,6 +32,14 @@ public class BanService {
                 this.cachedBans.add(punishment);
 
                 this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentInitiateEvent(punishment, id, initiator));
+
+                if (punishment.targetIsOnline()) {
+                    final Player player = this.professionalPunishments.getServer().getPlayer(punishment.getTarget());
+                    player.kick(this.professionalPunishments.getMessageLoader().get(
+                            MessageKeys.SYSTEM_SCREEN_BAN, punishment.getId(), punishment.getReason(),
+                            punishment.getInitiator(), punishment.getDate(),
+                            this.professionalPunishments.getRemainingTime(punishment.getExpire())));
+                }
 
                 // inserting ban log
                 this.professionalPunishments.getDataService().insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "BL"), id, Punishment.LogType.LOG_BAN, target, reason, initiator, punishment.getDate()));

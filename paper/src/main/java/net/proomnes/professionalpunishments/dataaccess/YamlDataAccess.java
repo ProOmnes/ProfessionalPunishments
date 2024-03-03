@@ -61,7 +61,7 @@ public class YamlDataAccess implements IDataAccess {
     public void isBanned(String target, Consumer<Boolean> is) {
         final AtomicBoolean isBanned = new AtomicBoolean(false);
 
-        this.bans.getSection("ban").getAll().getKeys().forEach(id -> {
+        this.bans.getSection("ban").getAll().getKeys(false).forEach(id -> {
             if (this.bans.getString("ban." + id + ".target").equals(target)) {
                 isBanned.set(true);
             }
@@ -82,7 +82,7 @@ public class YamlDataAccess implements IDataAccess {
             final String generatedId = this.professionalPunishments.getRandomId(5, "UBL");
 
             // delete active ban
-            final Map<String, Object> objectMap = this.bans.getSection("ban." + punishment.getId()).getAllMap();
+            final Map<String, Object> objectMap = this.bans.getSection("ban").getAllMap();
             objectMap.remove(punishment.getId());
             this.bans.set("ban", objectMap);
             this.bans.save();
@@ -125,7 +125,7 @@ public class YamlDataAccess implements IDataAccess {
     public void isMuted(String target, Consumer<Boolean> is) {
         final AtomicBoolean isMuted = new AtomicBoolean(false);
 
-        this.mutes.getSection("mute").getAll().getKeys().forEach(id -> {
+        this.mutes.getSection("mute").getAll().getKeys(false).forEach(id -> {
             if (this.mutes.getString("mute." + id + ".target").equals(target)) {
                 isMuted.set(true);
             }
@@ -145,7 +145,7 @@ public class YamlDataAccess implements IDataAccess {
             final String generatedId = this.professionalPunishments.getRandomId(5, "UML");
 
             // delete active mute
-            final Map<String, Object> objectMap = this.mutes.getSection("mute." + punishment.getId()).getAllMap();
+            final Map<String, Object> objectMap = this.mutes.getSection("mute").getAllMap();
             objectMap.remove(punishment.getId());
             this.mutes.set("mute", objectMap);
             this.mutes.save();
@@ -188,7 +188,7 @@ public class YamlDataAccess implements IDataAccess {
     public void getActiveWarnings(String target, Consumer<Set<Punishment>> punishments) {
         final Set<Punishment> warnings = new HashSet<>();
 
-        this.warnings.getSection("warning").getAll().getKeys().forEach(id -> {
+        this.warnings.getSection("warning").getAll().getKeys(false).forEach(id -> {
             if (this.warnings.getString("warning." + id + ".target").equals(target)) {
                 warnings.add(new Punishment(
                         id,
@@ -213,7 +213,7 @@ public class YamlDataAccess implements IDataAccess {
     public void getAllActiveWarnings(Consumer<Set<Punishment>> punishmentConsumer) {
         final Set<Punishment> warnings = new HashSet<>();
 
-        this.warnings.getSection("warning").getAll().getKeys().forEach(id -> {
+        this.warnings.getSection("warning").getAll().getKeys(false).forEach(id -> {
             warnings.add(new Punishment(
                     id,
                     this.warnings.getString("warning." + id + ".relatedId"),
@@ -240,7 +240,7 @@ public class YamlDataAccess implements IDataAccess {
         final String generatedId = this.professionalPunishments.getRandomId(5, "UWL");
 
         // delete active warning
-        final Map<String, Object> objectMap = this.warnings.getSection("warning." + warnId).getAllMap();
+        final Map<String, Object> objectMap = this.warnings.getSection("warning").getAllMap();
         objectMap.remove(warnId);
         this.warnings.set("warning", objectMap);
         this.warnings.save();
@@ -286,12 +286,12 @@ public class YamlDataAccess implements IDataAccess {
      */
     @Override
     public void getBan(String target, Consumer<Punishment> punishmentConsumer) {
-        this.bans.getSection("ban").getAll().getKeys().forEach(id -> {
+        this.bans.getSection("ban").getAll().getKeys(false).forEach(id -> {
             if (this.bans.getString("ban." + id + ".target").equals(target)) {
                 punishmentConsumer.accept(new Punishment(
                         id,
                         this.bans.getString("ban." + id + ".relatedId"),
-                        Punishment.Type.valueOf(this.warnings.getString("ban." + id + ".type")),
+                        Punishment.Type.valueOf(this.bans.getString("ban." + id + ".type")),
                         this.bans.getString("ban." + id + ".target"),
                         this.bans.getString("ban." + id + ".reason"),
                         this.bans.getString("ban." + id + ".initiator"),
@@ -309,11 +309,11 @@ public class YamlDataAccess implements IDataAccess {
     public void getAllBans(Consumer<Set<Punishment>> punishmentConsumer) {
         final Set<Punishment> punishments = new HashSet<>();
 
-        this.bans.getSection("ban").getAll().getKeys().forEach(id -> {
+        this.bans.getSection("ban").getAll().getKeys(false).forEach(id -> {
             punishments.add(new Punishment(
                     id,
                     this.bans.getString("ban." + id + ".relatedId"),
-                    Punishment.Type.valueOf(this.warnings.getString("ban." + id + ".type")),
+                    Punishment.Type.valueOf(this.bans.getString("ban." + id + ".type")),
                     this.bans.getString("ban." + id + ".target"),
                     this.bans.getString("ban." + id + ".reason"),
                     this.bans.getString("ban." + id + ".initiator"),
@@ -331,12 +331,12 @@ public class YamlDataAccess implements IDataAccess {
      */
     @Override
     public void getMute(String target, Consumer<Punishment> punishmentConsumer) {
-        this.mutes.getSection("mute").getAll().getKeys().forEach(id -> {
+        this.mutes.getSection("mute").getAll().getKeys(false).forEach(id -> {
             if (this.mutes.getString("mute." + id + ".target").equals(target)) {
                 punishmentConsumer.accept(new Punishment(
                         id,
                         this.mutes.getString("mute." + id + ".relatedId"),
-                        Punishment.Type.valueOf(this.warnings.getString("mute." + id + ".type")),
+                        Punishment.Type.valueOf(this.mutes.getString("mute." + id + ".type")),
                         this.mutes.getString("mute." + id + ".target"),
                         this.mutes.getString("mute." + id + ".reason"),
                         this.mutes.getString("mute." + id + ".initiator"),
@@ -354,11 +354,11 @@ public class YamlDataAccess implements IDataAccess {
     public void getAllMutes(Consumer<Set<Punishment>> punishmentConsumer) {
         final Set<Punishment> punishments = new HashSet<>();
 
-        this.mutes.getSection("mute").getAll().getKeys().forEach(id -> {
+        this.mutes.getSection("mute").getAll().getKeys(false).forEach(id -> {
             punishments.add(new Punishment(
                     id,
                     this.mutes.getString("mute." + id + ".relatedId"),
-                    Punishment.Type.valueOf(this.warnings.getString("mute." + id + ".type")),
+                    Punishment.Type.valueOf(this.mutes.getString("mute." + id + ".type")),
                     this.mutes.getString("mute." + id + ".target"),
                     this.mutes.getString("mute." + id + ".reason"),
                     this.mutes.getString("mute." + id + ".initiator"),
@@ -494,7 +494,7 @@ public class YamlDataAccess implements IDataAccess {
     public void getLogs(String target, Punishment.LogType type, Consumer<Set<Punishment.Log>> punishmentConsumer) {
         final Set<Punishment.Log> logs = new HashSet<>();
 
-        this.logs.getSection("log").getAll().getKeys().forEach(id -> {
+        this.logs.getSection("log").getAll().getKeys(false).forEach(id -> {
             if (this.logs.getString("log." + id + ".target").equals(target)) {
                 logs.add(new Punishment.Log(
                         id,
@@ -518,7 +518,7 @@ public class YamlDataAccess implements IDataAccess {
     public void getAllLogs(Consumer<Set<Punishment.Log>> punishmentConsumer) {
         final Set<Punishment.Log> logs = new HashSet<>();
 
-        this.logs.getSection("log").getAll().getKeys().forEach(id -> {
+        this.logs.getSection("log").getAll().getKeys(false).forEach(id -> {
             logs.add(new Punishment.Log(
                     id,
                     this.logs.getString("log." + id + ".relatedId"),
@@ -539,7 +539,7 @@ public class YamlDataAccess implements IDataAccess {
      */
     @Override
     public void clearLogs(String target, Punishment.LogType type) {
-        this.logs.getSection("log").getAll().getKeys().forEach(id -> {
+        this.logs.getSection("log").getAll().getKeys(false).forEach(id -> {
             if (this.logs.getString("log." + id + ".target").equals(target)) {
                 this.deleteLogEntry(id);
             }
@@ -551,7 +551,7 @@ public class YamlDataAccess implements IDataAccess {
      */
     @Override
     public void deleteLogEntry(String id) {
-        final Map<String, Object> objectMap = this.logs.getSection("log." + id).getAllMap();
+        final Map<String, Object> objectMap = this.logs.getSection("log").getAllMap();
         objectMap.remove(id);
         this.logs.set("log", objectMap);
         this.logs.save();

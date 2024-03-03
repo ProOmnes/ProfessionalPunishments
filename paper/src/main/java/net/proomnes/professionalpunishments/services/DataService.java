@@ -8,6 +8,7 @@ import net.proomnes.professionalpunishments.objects.Punishment;
 import net.proomnes.professionalpunishments.objects.Reason;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -16,9 +17,9 @@ public class DataService {
 
     private final ProfessionalPunishments professionalPunishments;
     public final Set<Punishment.Log> cachedLogs = new HashSet<>();
-    public final Set<Reason> banPresets = new HashSet<>();
-    public final Set<Reason> mutePresets = new HashSet<>();
-    public final Set<Reason> warningPresets = new HashSet<>();
+    public final LinkedHashSet<Reason> banPresets = new LinkedHashSet<>();
+    public final LinkedHashSet<Reason> mutePresets = new LinkedHashSet<>();
+    public final LinkedHashSet<Reason> warningPresets = new LinkedHashSet<>();
 
     public DataService(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
@@ -119,7 +120,7 @@ public class DataService {
     }
 
     public void insertLog(final Punishment.Log log) {
-        this.professionalPunishments.getDataService().insertLog(log);
+        this.professionalPunishments.getDataAccess().insertLog(log);
         this.cachedLogs.add(log);
 
         this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentLogInsertEvent(log));
