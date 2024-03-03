@@ -30,7 +30,7 @@ public class TempmuteCommand extends Command implements TabCompleter {
             final String target = args[0];
             final String timeFormat = args[1];
             final StringBuilder reason = new StringBuilder();
-            for (int i = 3; i < args.length; ++i) reason.append(args[i]).append(" ");
+            for (int i = 2; i < args.length; ++i) reason.append(args[i]).append(" ");
 
             this.plugin.getMuteService().isMuted(target, is -> {
                 if (is) {

@@ -29,7 +29,7 @@ public class UnmuteCommand extends Command implements TabCompleter {
         if (args.length >= 2) {
             final String target = args[0];
             final StringBuilder reason = new StringBuilder();
-            for (int i = 2; i < args.length; ++i) reason.append(args[i]).append(" ");
+            for (int i = 1; i < args.length; ++i) reason.append(args[i]).append(" ");
 
             this.plugin.getMuteService().isMuted(target, is -> {
                 if (!is) {

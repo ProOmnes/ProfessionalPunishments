@@ -37,7 +37,7 @@ public class EditwarningCommand extends Command implements TabCompleter {
                 switch (args[1]) {
                     case "reason":
                         final StringBuilder reason = new StringBuilder();
-                        for (int i = 3; i < args.length; ++i) reason.append(args[i]).append(" ");
+                        for (int i = 2; i < args.length; ++i) reason.append(args[i]).append(" ");
 
                         this.plugin.getDataService().setPunishmentReason(punishment, reason.toString());
                         sender.sendMessage(this.plugin.getMessageLoader().get(

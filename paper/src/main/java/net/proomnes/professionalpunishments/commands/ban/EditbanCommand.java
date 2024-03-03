@@ -23,6 +23,8 @@ public class EditbanCommand extends Command implements TabCompleter {
         this.plugin = professionalPunishments;
     }
 
+    // TODO: remove Spacing
+
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String s, @NotNull String[] args) {
         if (!this.testPermission(sender)) return true;
@@ -37,7 +39,7 @@ public class EditbanCommand extends Command implements TabCompleter {
                 switch (args[1]) {
                     case "reason":
                         final StringBuilder reason = new StringBuilder();
-                        for (int i = 3; i < args.length; ++i) reason.append(args[i]).append(" ");
+                        for (int i = 2; i < args.length; ++i) reason.append(args[i]).append(" ");
 
                         this.plugin.getBanService().getBan(target, punishment -> {
                             this.plugin.getDataService().setPunishmentReason(punishment, reason.toString());
