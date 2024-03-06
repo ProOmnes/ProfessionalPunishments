@@ -28,15 +28,15 @@ public class DataService {
 
         this.professionalPunishments.getConfig().getStringList("presets.ban").forEach(entry -> {
             final String[] presetData = entry.split(":");
-            this.banPresets.add(new Reason(presetData[0], presetData[1], Integer.parseInt(presetData[2])));
+            this.banPresets.add(new Reason(presetData[0], presetData[1], presetData[2]));
         });
         this.professionalPunishments.getConfig().getStringList("presets.mute").forEach(entry -> {
             final String[] presetData = entry.split(":");
-            this.mutePresets.add(new Reason(presetData[0], presetData[1], Integer.parseInt(presetData[2])));
+            this.mutePresets.add(new Reason(presetData[0], presetData[1], presetData[2]));
         });
         this.professionalPunishments.getConfig().getStringList("presets.warning").forEach(entry -> {
             final String[] presetData = entry.split(":");
-            this.warningPresets.add(new Reason(presetData[0], presetData[1], Integer.parseInt(presetData[2])));
+            this.warningPresets.add(new Reason(presetData[0], presetData[1], presetData[2]));
         });
     }
 

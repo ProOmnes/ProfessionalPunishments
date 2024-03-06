@@ -55,7 +55,7 @@ public class BanCommand extends Command implements TabCompleter {
                         .findFirst()
                         .get();
 
-                this.plugin.getBanService().banPlayer(target, reason.getReason(), sender.getName(), reason.getMinutes());
+                this.plugin.getBanService().banPlayer(target, reason.getReason(), sender.getName(), this.plugin.timeFormatToMinutes(reason.getDuration()));
                 sender.sendMessage(this.plugin.getMessageLoader().get(
                         MessageKeys.PUNISHMENT_BAN_SUCCESSFULLY_BANNED, target, reason.getReason()
                 ));
@@ -63,7 +63,7 @@ public class BanCommand extends Command implements TabCompleter {
         } else {
             this.plugin.getDataService().banPresets.forEach(reason -> {
                 sender.sendMessage(this.plugin.getMessageLoader().get(
-                        MessageKeys.PUNISHMENT_BAN_PRESET, reason.getId(), reason.getReason(), reason.getMinutes()
+                        MessageKeys.PUNISHMENT_BAN_PRESET, reason.getId(), reason.getReason(), reason.getDuration()
                 ));
             });
             sender.sendMessage(this.plugin.getMessageLoader().get(

@@ -47,14 +47,14 @@ public class WarnCommand extends Command implements TabCompleter {
                     .findFirst()
                     .get();
 
-            this.plugin.getWarningService().warnPlayer(target, reason.getReason(), sender.getName(), reason.getMinutes());
+            this.plugin.getWarningService().warnPlayer(target, reason.getReason(), sender.getName(), this.plugin.timeFormatToMinutes(reason.getDuration()));
             sender.sendMessage(this.plugin.getMessageLoader().get(
                     MessageKeys.PUNISHMENT_WARN_SUCCESSFULLY_WARNED, target, reason.getReason()
             ));
         } else {
             this.plugin.getDataService().warningPresets.forEach(reason -> {
                 sender.sendMessage(this.plugin.getMessageLoader().get(
-                        MessageKeys.PUNISHMENT_WARN_PRESET, reason.getId(), reason.getReason(), reason.getMinutes()
+                        MessageKeys.PUNISHMENT_WARN_PRESET, reason.getId(), reason.getReason(), reason.getDuration()
                 ));
             });
             sender.sendMessage(this.plugin.getMessageLoader().get(

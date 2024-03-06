@@ -11,6 +11,6 @@ public class Reason {
 
     private final String id;
     private final String reason;
-    private final int minutes;
+    private final String duration;
 
 }

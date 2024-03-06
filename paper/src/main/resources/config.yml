@@ -32,15 +32,15 @@ settings:
 # 1 year = 525600 minutes
 presets:
   ban:
-    - 1:Hacking:120
-    - 2:Insults:60
+    - 1:Hacking:1d12h
+    - 2:Insults:8h
   mute:
-    - 1:Spamming:30
-    - 2:Insults:120
-    - 3:Advertisement:240
+    - 1:Spamming:30m
+    - 2:Insults:2h
+    - 3:Advertisement:2d12h
   warning:
-    - 1:Chat behavior:1440
-    - 2:Insults:2880
+    - 1:Chat behavior:7d
+    - 2:Insults:10d12h
 
 # If you set the provider to 'MongoDB', please specify the connection uri and the database.
 mongodb:

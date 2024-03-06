@@ -184,7 +184,7 @@ public class ProfessionalPunishments extends JavaPlugin {
      * @return Returns the minutes as Integer
      */
     public int timeFormatToMinutes(String timeFormat) {
-        int totalMinutes = 0;
+        int totalMinutes = -1;
 
         // Regular expression pattern to match days, hours, and minutes
         final Pattern pattern = Pattern.compile("(\\d+d)?(\\d+h)?(\\d+m)?");
