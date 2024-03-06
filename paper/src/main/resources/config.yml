@@ -21,15 +21,19 @@ settings:
     enable: true
     limit: 5
     ban-reason: "You reached the warning limit"
-    ban-minutes: 10080
+    ban-duration: 5d12h
 
 # In this section, you can define default values for reasons and durations of punishments.
-# -1 = Permanent
-# 1 hour = 60 minutes
-# 1 day = 1440 minutes
-# 1 week = 10080 minutes
-# 1 month = 43800 minutes
-# 1 year = 525600 minutes
+
+# Possible time formats:
+# Permanent = -1
+# 30 minutes = 30m
+# 1 hour = 1h
+# 1 day = 1d
+# 5,5 days = 5d12h
+# Time-Format: 3d2h1m
+
+# Preset-Format: id:reason:time-format
 presets:
   ban:
     - 1:Hacking:1d12h
