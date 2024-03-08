@@ -29,8 +29,9 @@ public class TempmuteCommand extends Command implements TabCompleter {
         if (args.length >= 3) {
             final String target = args[0];
             final String timeFormat = args[1];
-            final StringBuilder reason = new StringBuilder();
-            for (int i = 2; i < args.length; ++i) reason.append(args[i]).append(" ");
+            final StringBuilder builder = new StringBuilder();
+            for (int i = 2; i < args.length; ++i) builder.append(args[i]).append(" ");
+            final String reason = builder.substring(0, builder.length() - 1);
 
             this.plugin.getMuteService().isMuted(target, is -> {
                 if (is) {
@@ -44,9 +45,9 @@ public class TempmuteCommand extends Command implements TabCompleter {
                     return;
                 }
 
-                this.plugin.getMuteService().mutePlayer(target, reason.toString(), sender.getName(), minutes);
+                this.plugin.getMuteService().mutePlayer(target, reason, sender.getName(), minutes);
                 sender.sendMessage(this.plugin.getMessageLoader().get(
-                        MessageKeys.PUNISHMENT_TEMPMUTE_SUCCESSFULLY_MUTED, target, reason.toString()
+                        MessageKeys.PUNISHMENT_TEMPMUTE_SUCCESSFULLY_MUTED, target, reason
                 ));
             });
         } else {

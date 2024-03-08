@@ -29,8 +29,9 @@ public class UnwarnCommand extends Command implements TabCompleter {
         if (args.length >= 3) {
             final String target = args[0];
             final String warnId = args[1];
-            final StringBuilder reason = new StringBuilder();
-            for (int i = 2; i < args.length; ++i) reason.append(args[i]).append(" ");
+            final StringBuilder builder = new StringBuilder();
+            for (int i = 2; i < args.length; ++i) builder.append(args[i]).append(" ");
+            final String reason = builder.substring(0, builder.length() - 1);
 
             this.plugin.getWarningService().getWarning(warnId, punishment -> {
                 if (punishment == null || !punishment.getTarget().equalsIgnoreCase(target)) {
@@ -40,9 +41,9 @@ public class UnwarnCommand extends Command implements TabCompleter {
                     return;
                 }
 
-                this.plugin.getWarningService().unwarnPlayer(target, warnId, sender.getName(), reason.toString());
+                this.plugin.getWarningService().unwarnPlayer(target, warnId, sender.getName(), reason);
                 sender.sendMessage(this.plugin.getMessageLoader().get(
-                        MessageKeys.PUNISHMENT_UNWARN_SUCCESSFULLY_UNWARNED, target, reason.toString()
+                        MessageKeys.PUNISHMENT_UNWARN_SUCCESSFULLY_UNWARNED, target, reason
                 ));
             });
         } else {

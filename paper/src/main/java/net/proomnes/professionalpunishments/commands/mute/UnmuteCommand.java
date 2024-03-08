@@ -28,8 +28,9 @@ public class UnmuteCommand extends Command implements TabCompleter {
         if (!this.testPermission(sender)) return true;
         if (args.length >= 2) {
             final String target = args[0];
-            final StringBuilder reason = new StringBuilder();
-            for (int i = 1; i < args.length; ++i) reason.append(args[i]).append(" ");
+            final StringBuilder builder = new StringBuilder();
+            for (int i = 1; i < args.length; ++i) builder.append(args[i]).append(" ");
+            final String reason = builder.substring(0, builder.length() - 1);
 
             this.plugin.getMuteService().isMuted(target, is -> {
                 if (!is) {
@@ -39,9 +40,9 @@ public class UnmuteCommand extends Command implements TabCompleter {
                     return;
                 }
 
-                this.plugin.getMuteService().unmutePlayer(target, sender.getName(), reason.toString());
+                this.plugin.getMuteService().unmutePlayer(target, sender.getName(), reason);
                 sender.sendMessage(this.plugin.getMessageLoader().get(
-                        MessageKeys.PUNISHMENT_UNMUTE_SUCCESSFULLY_UNMUTED, target, reason.toString()
+                        MessageKeys.PUNISHMENT_UNMUTE_SUCCESSFULLY_UNMUTED, target, reason
                 ));
             });
         } else {

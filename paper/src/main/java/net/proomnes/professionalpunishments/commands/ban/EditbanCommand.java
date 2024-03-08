@@ -38,13 +38,14 @@ public class EditbanCommand extends Command implements TabCompleter {
 
                 switch (args[1]) {
                     case "reason":
-                        final StringBuilder reason = new StringBuilder();
-                        for (int i = 2; i < args.length; ++i) reason.append(args[i]).append(" ");
+                        final StringBuilder builder = new StringBuilder();
+                        for (int i = 2; i < args.length; ++i) builder.append(args[i]).append(" ");
+                        final String reason = builder.substring(0, builder.length() - 1);
 
                         this.plugin.getBanService().getBan(target, punishment -> {
-                            this.plugin.getDataService().setPunishmentReason(punishment, reason.toString());
+                            this.plugin.getDataService().setPunishmentReason(punishment, reason);
                             sender.sendMessage(this.plugin.getMessageLoader().get(
-                                    MessageKeys.PUNISHMENT_EDITBAN_REASON, target, reason.toString(), punishment.getId()
+                                    MessageKeys.PUNISHMENT_EDITBAN_REASON, target, reason, punishment.getId()
                             ));
                         });
                         break;
