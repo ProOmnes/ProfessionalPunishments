@@ -541,7 +541,9 @@ public class YamlDataAccess implements IDataAccess {
     public void clearLogs(String target, Punishment.LogType type) {
         this.logs.getSection("log").getAll().getKeys(false).forEach(id -> {
             if (this.logs.getString("log." + id + ".target").equals(target)) {
-                this.deleteLogEntry(id);
+                if (this.logs.getString("log." + id + ".logType").equals(type.name().toUpperCase())) {
+                    this.deleteLogEntry(id);
+                }
             }
         });
     }
