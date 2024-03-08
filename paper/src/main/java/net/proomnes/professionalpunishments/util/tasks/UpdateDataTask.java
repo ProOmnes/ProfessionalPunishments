@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
 import net.proomnes.professionalpunishments.util.messages.MessageKeys;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerKickEvent;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -36,8 +35,9 @@ public class UpdateDataTask implements Runnable {
                     if (punishment.targetIsOnline()) {
                         final Player player = this.professionalPunishments.getServer().getPlayer(punishment.getTarget());
                         player.kick(this.professionalPunishments.getMessageLoader().get(
-                                MessageKeys.SYSTEM_SCREEN_BAN, punishment.getId(), punishment.getReason(), punishment.getInitiator(), punishment.getDate(), this.professionalPunishments.getRemainingTime(punishment.getExpire()
-                                )), PlayerKickEvent.Cause.UNKNOWN);
+                                MessageKeys.SYSTEM_SCREEN_BAN, punishment.getId(), punishment.getReason(), punishment.getInitiator(), punishment.getDate(),
+                                this.professionalPunishments.getRemainingTime(punishment.getExpire())
+                        ));
                     }
                 });
             });
