@@ -1,6 +1,8 @@
 package net.proomnes.professionalpunishments;
 
 import lombok.Getter;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.proomnes.professionalpunishments.api.PunishmentAPI;
 import net.proomnes.professionalpunishments.commands.ban.*;
 import net.proomnes.professionalpunishments.commands.mute.*;
 import net.proomnes.professionalpunishments.commands.warning.*;
@@ -39,6 +41,9 @@ public class ProfessionalPunishments extends JavaPlugin {
 
     private MessageLoader messageLoader;
 
+    @Getter
+    private static PunishmentAPI punishmentAPI;
+
     @Override
     public void onLoad() {
         this.getLogger().info("Loading plugin...");
@@ -61,6 +66,8 @@ public class ProfessionalPunishments extends JavaPlugin {
                 break;
             case "MongoDB":
                 this.dataAccess = new MongoDBDataAccess(this);
+
+                // disable MongoDB Logger
                 final Logger mongoLogger = Logger.getLogger("org.mongodb.driver");
                 mongoLogger.setLevel(Level.OFF);
                 break;
@@ -68,7 +75,7 @@ public class ProfessionalPunishments extends JavaPlugin {
                 this.dataAccess = new MySQLDataAccess(this);
                 break;
             default:
-                this.getLogger().info("§4Please specify a valid provider: 'Yaml', 'MySQL', 'MongoDB'.");
+                this.getLogger().warning("§4Please specify a valid provider: 'Yaml', 'MySQL', 'MongoDB'.");
                 break;
         }
     }
@@ -84,6 +91,7 @@ public class ProfessionalPunishments extends JavaPlugin {
         this.dataService = new DataService(this);
 
         // api
+        punishmentAPI = new PunishmentAPI(this.banService, this.muteService, this.warningService, this.messageLoader);
 
         // listeners
         this.getServer().getPluginManager().registerEvents(new EventListener(this), this);
@@ -114,19 +122,20 @@ public class ProfessionalPunishments extends JavaPlugin {
         final int interval = this.getConfig().getInt("settings.update-interval");
         if (!(interval <= 29)) this.getServer().getScheduler().runTaskTimerAsynchronously(this, new UpdateDataTask(this), interval * 60L, interval * 60L);
 
-        this.getLogger().info("Plugin loaded and enabled.");
-        this.getLogger().info("ProfessionalPunishments is a moderation tool for server staff.");
-        this.getLogger().info("This plugin was developed by Jan Pretzer.");
-        this.getLogger().info("Have fun using this plugin!");
+        // start-up messages
+        this.getLogger().info("Plugin " + this.getPluginMeta().getName() + " " + this.getPluginMeta().getVersion() + " successfully loaded and enabled.");
+        this.getLogger().info(this.getPluginMeta().getDescription());
+        this.getLogger().info("This plugin was developed by " + this.getPluginMeta().getAuthors().get(0));
+        this.getLogger().info("Report issues on our Github repository: https://github.com/ProOmnes/ProfessionalPunishments/issues");
     }
 
     @Override
     public void onDisable() {
-        this.getLogger().info("Plugin disabled.");
+        this.getLogger().info("Plugin unloaded and disabled.");
     }
 
     public String getRandomId(final int length) {
-        final String chars = "abcdefgrqpxyz1234567890";
+        final String chars = "abcdefgrxyz1234567890";
         final StringBuilder stringBuilder = new StringBuilder();
         final Random rnd = new Random();
         while (stringBuilder.length() < length) {
@@ -154,7 +163,7 @@ public class ProfessionalPunishments extends JavaPlugin {
 
     public String getRemainingTime(long duration) {
         if (duration == -1L) {
-            return this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_PERMANENT).toString();
+            return PlainTextComponentSerializer.plainText().serialize(this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_PERMANENT));
         }
 
         final long time = duration - System.currentTimeMillis();
@@ -162,15 +171,15 @@ public class ProfessionalPunishments extends JavaPlugin {
         final int hours = (int) (time / 3600000L % 24L);
         final int minutes = (int) (time / 60000L % 60L);
 
-        final String day = (days == 1) ? this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_DAY).toString() :
-                this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_DAYS).toString();
-        final String hour = (hours == 1) ? this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_HOUR).toString() :
-                this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_HOURS).toString();
-        final String minute = (minutes == 1) ? this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_MINUTE).toString() :
-                this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_MINUTES).toString();
+        final String day = (days == 1) ? PlainTextComponentSerializer.plainText().serialize(this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_DAY)) :
+                PlainTextComponentSerializer.plainText().serialize(this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_DAYS));
+        final String hour = (hours == 1) ? PlainTextComponentSerializer.plainText().serialize(this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_HOUR)) :
+                PlainTextComponentSerializer.plainText().serialize(this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_HOURS));
+        final String minute = (minutes == 1) ? PlainTextComponentSerializer.plainText().serialize(this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_MINUTE)) :
+                PlainTextComponentSerializer.plainText().serialize(this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_MINUTES));
 
         if (minutes < 1 && days == 0 && hours == 0) {
-            return this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_SECONDS).toString();
+            return PlainTextComponentSerializer.plainText().serialize(this.getMessageLoader().get(MessageKeys.SYSTEM_TIME_SECONDS));
         } else if (hours == 0 && days == 0) {
             return minutes + " " + minute;
         } else {
