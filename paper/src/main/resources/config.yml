@@ -154,6 +154,21 @@ commands:
     description: "Get a history of all warnings of this player."
     aliases: [ "wlog", "warninghistory" ]
     permission: "punishments.command.warnlog"
+  checkpunishment:
+    name: "checkpunishment"
+    description: "Check if a punishment id exists and get data."
+    aliases: [ "cp", "checkid" ]
+    permission: "punishments.command.checkpunishment"
+  clearlog:
+    name: "clearlog"
+    description: "Clear a certain log type of a player."
+    aliases: [ "clog", "deletelog" ]
+    permission: "punishments.command.clearlog"
+  deletepunishment:
+    name: "deletepunishment"
+    description: "Delete a certain log entry of a player by the log id."
+    aliases: [ "dlog", "deletelog" ]
+    permission: "punishments.command.deletepunishment"
 
 # Do not edit the config version!
 version: 1

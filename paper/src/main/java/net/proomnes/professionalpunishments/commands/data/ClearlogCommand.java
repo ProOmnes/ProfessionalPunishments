@@ -1,4 +1,56 @@
 package net.proomnes.professionalpunishments.commands.data;
 
-public class ClearlogCommand {
+import net.proomnes.professionalpunishments.ProfessionalPunishments;
+import net.proomnes.professionalpunishments.objects.Punishment;
+import net.proomnes.professionalpunishments.util.messages.MessageKeys;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
+public class ClearlogCommand extends Command implements TabCompleter {
+
+    private final ProfessionalPunishments plugin;
+
+    public ClearlogCommand(final ProfessionalPunishments professionalPunishments) {
+        super(professionalPunishments.getConfig().getString("commands.clearlog.name"));
+        this.setDescription(professionalPunishments.getConfig().getString("commands.clearlog.description"));
+        this.setAliases(professionalPunishments.getConfig().getStringList("commands.clearlog.aliases"));
+        this.setPermission(professionalPunishments.getConfig().getString("commands.clearlog.permission"));
+
+        this.plugin = professionalPunishments;
+    }
+
+    @Override
+    public boolean execute(@NotNull CommandSender sender, @NotNull String s, @NotNull String[] args) {
+        if (!this.testPermission(sender)) return true;
+        if (args.length == 2) {
+            final String target = args[0];
+            try {
+                final Punishment.LogType logType = Punishment.LogType.valueOf(args[1].toUpperCase());
+                this.plugin.getDataService().clearLogs(target, logType);
+                sender.sendMessage(this.plugin.getMessageLoader().get(
+                        MessageKeys.PUNISHMENT_CLEARLOG_CLEARED, target, logType.name().split("_")[1].toLowerCase()
+                ));
+            } catch (final IllegalArgumentException exception) {
+                sender.sendMessage(this.plugin.getMessageLoader().get(
+                        MessageKeys.PUNISHMENT_CLEARLOG_INVALID_TYPE, args[1]
+                ));
+            }
+        } else {
+            sender.sendMessage(this.plugin.getMessageLoader().get(
+                    MessageKeys.PUNISHMENT_CLEARLOG_USAGE, this.getName(), this.getDescription()
+            ));
+        }
+        return false;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        return null;
+    }
+
 }

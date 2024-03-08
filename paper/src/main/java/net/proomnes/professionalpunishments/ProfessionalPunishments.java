@@ -4,6 +4,9 @@ import lombok.Getter;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.proomnes.professionalpunishments.api.PunishmentAPI;
 import net.proomnes.professionalpunishments.commands.ban.*;
+import net.proomnes.professionalpunishments.commands.data.CheckpunishmentCommand;
+import net.proomnes.professionalpunishments.commands.data.ClearlogCommand;
+import net.proomnes.professionalpunishments.commands.data.DeletePunishmentCommand;
 import net.proomnes.professionalpunishments.commands.mute.*;
 import net.proomnes.professionalpunishments.commands.warning.*;
 import net.proomnes.professionalpunishments.dataaccess.IDataAccess;
@@ -117,6 +120,10 @@ public class ProfessionalPunishments extends JavaPlugin {
         this.getServer().getCommandMap().register("professionalpunishments", new WarnCommand(this));
         this.getServer().getCommandMap().register("professionalpunishments", new WarningsCommand(this));
         this.getServer().getCommandMap().register("professionalpunishments", new WarnlogCommand(this));
+
+        this.getServer().getCommandMap().register("professionalpunishments", new CheckpunishmentCommand(this));
+        this.getServer().getCommandMap().register("professionalpunishments", new ClearlogCommand(this));
+        this.getServer().getCommandMap().register("professionalpunishments", new DeletePunishmentCommand(this));
 
         // tasks
         final int interval = this.getConfig().getInt("settings.update-interval");
