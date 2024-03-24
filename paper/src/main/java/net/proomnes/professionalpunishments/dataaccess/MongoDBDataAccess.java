@@ -227,17 +227,19 @@ public class MongoDBDataAccess implements IDataAccess {
 
             // get all warnings
             for (final Document document : this.warningCollection.find(new Document("target", target))) {
-                final Punishment entry = new Punishment(
-                        document.getString("_id"),
-                        document.getString("relatedId"),
-                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
-                        document.getString("target"),
-                        document.getString("reason"),
-                        document.getString("initiator"),
-                        document.getString("date"),
-                        document.getLong("expire")
-                );
-                warnings.add(entry);
+                if (document.getLong("expire") > System.currentTimeMillis()) {
+                    final Punishment entry = new Punishment(
+                            document.getString("_id"),
+                            document.getString("relatedId"),
+                            Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                            document.getString("target"),
+                            document.getString("reason"),
+                            document.getString("initiator"),
+                            document.getString("date"),
+                            document.getLong("expire")
+                    );
+                    warnings.add(entry);
+                }
             }
 
             punishments.accept(warnings);
@@ -253,16 +255,18 @@ public class MongoDBDataAccess implements IDataAccess {
             final Set<Punishment> punishments = new HashSet<>();
 
             for (final Document document : this.warningCollection.find()) {
-                punishments.add(new Punishment(
-                        document.getString("_id"),
-                        document.getString("relatedId"),
-                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
-                        document.getString("target"),
-                        document.getString("reason"),
-                        document.getString("initiator"),
-                        document.getString("date"),
-                        document.getLong("expire")
-                ));
+                if (document.getLong("expire") > System.currentTimeMillis()) {
+                    punishments.add(new Punishment(
+                            document.getString("_id"),
+                            document.getString("relatedId"),
+                            Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                            document.getString("target"),
+                            document.getString("reason"),
+                            document.getString("initiator"),
+                            document.getString("date"),
+                            document.getLong("expire")
+                    ));
+                }
             }
 
             punishmentConsumer.accept(punishments);
@@ -505,16 +509,18 @@ public class MongoDBDataAccess implements IDataAccess {
                     if (warning == null) {
                         punishmentConsumer.accept(null);
                     } else {
-                        punishmentConsumer.accept(new Punishment(
-                                warning.getString("_id"),
-                                warning.getString("relatedId"),
-                                Punishment.Type.valueOf(warning.getString("type").toUpperCase()),
-                                warning.getString("target"),
-                                warning.getString("reason"),
-                                warning.getString("initiator"),
-                                warning.getString("date"),
-                                warning.getLong("expire")
-                        ));
+                        if (warning.getLong("expire") > System.currentTimeMillis()) {
+                            punishmentConsumer.accept(new Punishment(
+                                    warning.getString("_id"),
+                                    warning.getString("relatedId"),
+                                    Punishment.Type.valueOf(warning.getString("type").toUpperCase()),
+                                    warning.getString("target"),
+                                    warning.getString("reason"),
+                                    warning.getString("initiator"),
+                                    warning.getString("date"),
+                                    warning.getLong("expire")
+                            ));
+                        } else punishmentConsumer.accept(null);
                     }
                 } else {
                     punishmentConsumer.accept(new Punishment(

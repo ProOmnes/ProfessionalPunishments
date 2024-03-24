@@ -42,10 +42,10 @@ public class WarningsCommand extends Command implements TabCompleter {
                 warnings.forEach(warning -> {
                     sender.sendMessage(this.plugin.getMessageLoader().get(
                             MessageKeys.PUNISHMENT_WARNINGS_ENTRY, warning.getId(), warning.getRelatedId(), warning.getTarget(),
-                            warning.getReason(), warning.getInitiator(), warning.getDate()
+                            warning.getReason(), warning.getInitiator(), warning.getDate(), this.plugin.getRemainingTime(warning.getExpire())
                     ));
                     sender.sendMessage(this.plugin .getMessageLoader().get(
-                            MessageKeys.PUNISHMENT_WARNINGS_ACTIONS, warning.getRelatedId(), warning.getTarget()
+                            MessageKeys.PUNISHMENT_WARNINGS_ACTIONS, warning.getId(), warning.getTarget()
                     ));
                 });
             });

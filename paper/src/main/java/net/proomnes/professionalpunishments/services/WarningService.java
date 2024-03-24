@@ -4,6 +4,7 @@ import net.proomnes.professionalpunishments.ProfessionalPunishments;
 import net.proomnes.professionalpunishments.events.PunishmentAbortEvent;
 import net.proomnes.professionalpunishments.events.PunishmentInitiateEvent;
 import net.proomnes.professionalpunishments.objects.Punishment;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashSet;
 import java.util.NoSuchElementException;
@@ -32,6 +33,20 @@ public class WarningService {
 
                 // inserting warning log
                 this.professionalPunishments.getDataService().insertLog(new Punishment.Log(this.professionalPunishments.getRandomId(5, "WL"), id, Punishment.LogType.LOG_WARNING, target, reason, initiator, punishment.getDate()));
+
+                // check if warning limit is reached
+                final FileConfiguration config = this.professionalPunishments.getConfig();
+                if (config.getBoolean("warn-limit.enable")) {
+                    this.getActiveWarnings(target, warnings -> {
+                        if (warnings.size() >= config.getInt("warn-limit.limit")) {
+                            this.professionalPunishments.getBanService().banPlayer(target,
+                                    config.getString("warn-limit.ban-reason"), "SYSTEM",
+                                    this.professionalPunishments.timeFormatToMinutes(
+                                            config.getString("warn-limit.ban-duration"))
+                            );
+                        }
+                    });
+                }
             });
         });
     }
@@ -60,7 +75,7 @@ public class WarningService {
         try {
             punishmentReference.set(this.cachedWarnings
                     .stream()
-                    .filter(ban -> ban.getId().equals(id))
+                    .filter(warning -> warning.getId().equals(id) && warning.getExpire() > System.currentTimeMillis())
                     .findFirst()
                     .get()
             );
@@ -81,7 +96,7 @@ public class WarningService {
     public void getActiveWarnings(final String target, final Consumer<Set<Punishment>> punishments) {
         punishments.accept(this.cachedWarnings
                 .stream()
-                .filter(punishment -> punishment.getTarget().equals(target))
+                .filter(punishment -> punishment.getTarget().equals(target) && punishment.getExpire() > System.currentTimeMillis())
                 .collect(Collectors.toSet())
         );
     }

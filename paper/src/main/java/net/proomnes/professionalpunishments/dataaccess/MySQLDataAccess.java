@@ -261,17 +261,19 @@ public class MySQLDataAccess implements IDataAccess {
 
             // get all warnings
             for (final Document document : this.client.find("warnings", "target", target).results()) {
-                final Punishment entry = new Punishment(
-                        document.getString("id"),
-                        document.getString("relatedId"),
-                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
-                        document.getString("target"),
-                        document.getString("reason"),
-                        document.getString("initiator"),
-                        document.getString("date"),
-                        document.getLong("expire")
-                );
-                warnings.add(entry);
+                if (document.getLong("expire") > System.currentTimeMillis()) {
+                    final Punishment entry = new Punishment(
+                            document.getString("id"),
+                            document.getString("relatedId"),
+                            Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                            document.getString("target"),
+                            document.getString("reason"),
+                            document.getString("initiator"),
+                            document.getString("date"),
+                            document.getLong("expire")
+                    );
+                    warnings.add(entry);
+                }
             }
 
             punishments.accept(warnings);
@@ -287,16 +289,18 @@ public class MySQLDataAccess implements IDataAccess {
             final Set<Punishment> punishments = new HashSet<>();
 
             for (final Document document : this.client.find("warnings").results()) {
-                punishments.add(new Punishment(
-                        document.getString("id"),
-                        document.getString("relatedId"),
-                        Punishment.Type.valueOf(document.getString("type").toUpperCase()),
-                        document.getString("target"),
-                        document.getString("reason"),
-                        document.getString("initiator"),
-                        document.getString("date"),
-                        document.getLong("expire")
-                ));
+                if (document.getLong("expire") > System.currentTimeMillis()) {
+                    punishments.add(new Punishment(
+                            document.getString("id"),
+                            document.getString("relatedId"),
+                            Punishment.Type.valueOf(document.getString("type").toUpperCase()),
+                            document.getString("target"),
+                            document.getString("reason"),
+                            document.getString("initiator"),
+                            document.getString("date"),
+                            document.getLong("expire")
+                    ));
+                }
             }
 
             punishmentConsumer.accept(punishments);
@@ -530,16 +534,18 @@ public class MySQLDataAccess implements IDataAccess {
                     if (warning == null) {
                         punishmentConsumer.accept(null);
                     } else {
-                        punishmentConsumer.accept(new Punishment(
-                                warning.getString("id"),
-                                warning.getString("relatedId"),
-                                Punishment.Type.valueOf(warning.getString("type")),
-                                warning.getString("target"),
-                                warning.getString("reason"),
-                                warning.getString("initiator"),
-                                warning.getString("date"),
-                                warning.getLong("expire")
-                        ));
+                        if (warning.getLong("expire") > System.currentTimeMillis()) {
+                            punishmentConsumer.accept(new Punishment(
+                                    warning.getString("id"),
+                                    warning.getString("relatedId"),
+                                    Punishment.Type.valueOf(warning.getString("type")),
+                                    warning.getString("target"),
+                                    warning.getString("reason"),
+                                    warning.getString("initiator"),
+                                    warning.getString("date"),
+                                    warning.getLong("expire")
+                            ));
+                        } else punishmentConsumer.accept(null);
                     }
                 } else {
                     punishmentConsumer.accept(new Punishment(

@@ -190,16 +190,18 @@ public class YamlDataAccess implements IDataAccess {
 
         this.warnings.getSection("warning").getAll().getKeys(false).forEach(id -> {
             if (this.warnings.getString("warning." + id + ".target").equals(target)) {
-                warnings.add(new Punishment(
-                        id,
-                        this.warnings.getString("warning." + id + ".relatedId"),
-                        Punishment.Type.valueOf(this.warnings.getString("warning." + id + ".type")),
-                        this.warnings.getString("warning." + id + ".target"),
-                        this.warnings.getString("warning." + id + ".reason"),
-                        this.warnings.getString("warning." + id + ".initiator"),
-                        this.warnings.getString("warning." + id + ".date"),
-                        this.warnings.getLong("warning." + id + ".expire")
-                ));
+                if (this.warnings.getLong("warning." + id + ".expire") > System.currentTimeMillis()) {
+                    warnings.add(new Punishment(
+                            id,
+                            this.warnings.getString("warning." + id + ".relatedId"),
+                            Punishment.Type.valueOf(this.warnings.getString("warning." + id + ".type")),
+                            this.warnings.getString("warning." + id + ".target"),
+                            this.warnings.getString("warning." + id + ".reason"),
+                            this.warnings.getString("warning." + id + ".initiator"),
+                            this.warnings.getString("warning." + id + ".date"),
+                            this.warnings.getLong("warning." + id + ".expire")
+                    ));
+                }
             }
         });
 
@@ -214,16 +216,18 @@ public class YamlDataAccess implements IDataAccess {
         final Set<Punishment> warnings = new HashSet<>();
 
         this.warnings.getSection("warning").getAll().getKeys(false).forEach(id -> {
-            warnings.add(new Punishment(
-                    id,
-                    this.warnings.getString("warning." + id + ".relatedId"),
-                    Punishment.Type.valueOf(this.warnings.getString("warning." + id + ".type")),
-                    this.warnings.getString("warning." + id + ".target"),
-                    this.warnings.getString("warning." + id + ".reason"),
-                    this.warnings.getString("warning." + id + ".initiator"),
-                    this.warnings.getString("warning." + id + ".date"),
-                    this.warnings.getLong("warning." + id + ".expire")
-            ));
+            if (this.warnings.getLong("warning." + id + ".expire") > System.currentTimeMillis()) {
+                warnings.add(new Punishment(
+                        id,
+                        this.warnings.getString("warning." + id + ".relatedId"),
+                        Punishment.Type.valueOf(this.warnings.getString("warning." + id + ".type")),
+                        this.warnings.getString("warning." + id + ".target"),
+                        this.warnings.getString("warning." + id + ".reason"),
+                        this.warnings.getString("warning." + id + ".initiator"),
+                        this.warnings.getString("warning." + id + ".date"),
+                        this.warnings.getLong("warning." + id + ".expire")
+                ));
+            }
         });
 
         punishmentConsumer.accept(warnings);
@@ -457,16 +461,18 @@ public class YamlDataAccess implements IDataAccess {
                     this.mutes.getLong("mute." + id + ".expire")
             ));
         } else if (this.warnings.exists("warning." + id)) {
-            punishmentConsumer.accept(new Punishment(
-                    id,
-                    this.warnings.getString("warning." + id + ".relatedId"),
-                    Punishment.Type.valueOf(this.warnings.getString("warning." + id + ".type")),
-                    this.warnings.getString("warning." + id + ".target"),
-                    this.warnings.getString("warning." + id + ".reason"),
-                    this.warnings.getString("warning." + id + ".initiator"),
-                    this.warnings.getString("warning." + id + ".date"),
-                    this.warnings.getLong("warning." + id + ".expire")
-            ));
+            if (this.warnings.getLong("warning." + id + ".expire") > System.currentTimeMillis()) {
+                punishmentConsumer.accept(new Punishment(
+                        id,
+                        this.warnings.getString("warning." + id + ".relatedId"),
+                        Punishment.Type.valueOf(this.warnings.getString("warning." + id + ".type")),
+                        this.warnings.getString("warning." + id + ".target"),
+                        this.warnings.getString("warning." + id + ".reason"),
+                        this.warnings.getString("warning." + id + ".initiator"),
+                        this.warnings.getString("warning." + id + ".date"),
+                        this.warnings.getLong("warning." + id + ".expire")
+                ));
+            } else punishmentConsumer.accept(null);
         } else punishmentConsumer.accept(null);
     }
 
