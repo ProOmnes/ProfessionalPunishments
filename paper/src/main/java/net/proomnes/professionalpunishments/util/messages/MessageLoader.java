@@ -32,7 +32,7 @@ public class MessageLoader {
         String message = this.cachedMessages.getOrDefault(messageKeys.getKey(), messageKeys.getDefaultMessage());
 
         if (messageKeys.isPrefix()) {
-            message = this.cachedMessages.get("system.prefix") + message;
+            message = this.cachedMessages.getOrDefault(MessageKeys.SYSTEM_PREFIX.getKey(), MessageKeys.SYSTEM_PREFIX.getDefaultMessage()) + message;
         }
 
         int i = 0;
@@ -40,8 +40,6 @@ public class MessageLoader {
             message = message.replace("{" + i + "}", String.valueOf(replacement));
             i++;
         }
-
-        message = message.replace("&", "§");
 
         return miniMessage.deserialize(message);
     }

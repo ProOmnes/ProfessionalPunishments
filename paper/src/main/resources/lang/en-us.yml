@@ -1,4 +1,119 @@
-# Plugin prefixes
-system.prefix: "§8» §bPunishments §8| §7"
+# You can format all messages with MiniMessage.
+# MiniMessage format and examples: https://docs.advntr.dev/minimessage/format.html
 
-# Plugin messages
+system:
+  prefix: "<dark_gray>» <gradient:#487fc0:#62cdff>Punishments</gradient> <dark_gray>| <gray>"
+  player:
+    not-banned: "<aqua>{0} <gray>is not banned."
+    not-muted: "<aqua>{0} <gray>is not muted."
+    already-banned: "<aqua>{0} <gray>is already banned."
+    already-muted: "<aqua>{0} <gray>is already muted."
+  punishment:
+    id-not-found: "<aqua>{0} <gray>is not a valid punishment identification."
+  log:
+    id-not-found: "<aqua>{0} <gray>is not a valid log identification."
+  time:
+    invalid-format: "<gray>Please provide a valid time format. Examples: <aqua>5d12h<gray>, <aqua>3d<gray>, <aqua>2d12h30m"
+    days: "days"
+    day: "day"
+    hours: "hours"
+    hour: "hour"
+    minutes: "minutes"
+    minute: "minute"
+    seconds: "Some seconds left..."
+    permanent: "Permanent"
+  screen:
+    ban: "<gradient:#487fc0:#62cdff>You are banned!</gradient><newline><gray>Reason: <aqua>{1}<newline><gray>Initiator: <aqua>{2} <gray>ID: <aqua>{0}<newline><gray>Remaining time: <aqua>{4}"
+    mute: "<newline><gradient:#487fc0:#62cdff>You are muted!</gradient><newline><gray>Reason: <aqua>{1}<newline><gray>Initiator: <aqua>{2} <gray>ID: <aqua>{0}<newline><gray>Remaining time: <aqua>{4}<newline>"
+
+punishment:
+  ban:
+    invalid-preset: "<aqua>{0} <gray>is not a valid preset id for bans."
+    preset: "<aqua>{0} <gray>| <aqua>{1} <gray>Duration: <aqua>{2}"
+    successfully-banned: "<gray>You successfully banned <aqua>{0} <gray>for <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <presetID> <gray>- {1}"
+  tempban:
+    successfully-banned: "<gray>You successfully banned <aqua>{0} <gray>for <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <timeFormat> <reason> <gray>- {1}"
+  unban:
+    successfully-unbanned: "<gray>You successfully unbanned player <aqua>{0} <gray> for <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <reason> <gray>- {1}"
+  banlog:
+    empty: "<gray>There is no banlog data about <aqua>{0}<gray>."
+    header: "<gray>Banlog data of <aqua>{1}<gray>. Entries: <aqua>{0}"
+    entry: "<newline><gray>LogID: <aqua>{0}<newline><gray>PunishmentID: <aqua>{1}<newline><gray>Reason: <aqua>{3}<newline><gray>Initiator: <aqua>{4}<newline><gray>Date: <aqua>{5}"
+    actions: "<click:suggest_command:/checkpunishment {0}><gray>[<gold>Check Punishment<gray>]</click> <click:suggest_command:/deletepunishment {0}><gray>[<red>Delete Entry<gray>]</click>"
+    usage: "<gray>Usage: <aqua>/{0} <player> <gray>- {1}"
+  editban:
+    reason: "<gray>You successfully edited the reason of the active ban of <aqua>{0} <gray>to <aqua>{1}<gray>."
+    duration: "<gray>You successfully edited the duration of the active ban of <aqua>{0} <gray>to <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <reason|duration> <newReason|newTimeFormat> <gray>- {1}"
+  checkban:
+    header: "<gray>Ban entry <aqua>{1} <gray>of player <aqua>{0}<gray>:"
+    content: "<newline><gray>PunishmentID: <aqua>{0}<newline><gray>Reason: <aqua>{3}<newline><gray>Initiator: <aqua>{4}<newline><gray>Date: <aqua>{5}<newline><gray>Remaining time: <aqua>{6}"
+    usage: "<gray>Usage: <aqua>/{0} <player> <gray>- {1}"
+  mute:
+    invalid-preset: "<aqua>{0} <gray>is not a valid preset id for mutes."
+    preset: "<aqua>{0} <gray>| <aqua>{1} <gray>Duration: <aqua>{2}"
+    successfully-muted: "<gray>You successfully muted <aqua>{0} <gray>for <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <presetID> <gray>- {1}"
+  tempmute:
+    successfully-muted: "<gray>You successfully muted <aqua>{0} <gray>for <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <timeFormat> <reason> <gray>- {1}"
+  unmute:
+    successfully-unmuted: "<gray>You successfully unmuted player <aqua>{0} <gray> for <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <reason> <gray>- {1}"
+  mutelog:
+    empty: "<gray>There is no mutelog data about <aqua>{0}<gray>."
+    header: "<gray>Mutelog data of <aqua>{1}<gray>. Entries: <aqua>{0}"
+    entry: "<newline><gray>LogID: <aqua>{0}<newline><gray>PunishmentID: <aqua>{1}<newline><gray>Reason: <aqua>{3}<newline><gray>Initiator: <aqua>{4}<newline><gray>Date: <aqua>{5}"
+    actions: "<click:suggest_command:/checkpunishment {0}><gray>[<gold>Check Punishment<gray>]</click> <click:suggest_command:/deletepunishment {0}><gray>[<red>Delete Entry<gray>]</click>"
+    usage: "<gray>Usage: <aqua>/{0} <player> <gray>- {1}"
+  editmute:
+    reason: "<gray>You successfully edited the reason of the active mute of <aqua>{0} <gray>to <aqua>{1}<gray>."
+    duration: "<gray>You successfully edited the duration of the active mute of <aqua>{0} <gray>to <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <reason|duration> <newReason|newTimeFormat> <gray>- {1}"
+  checkmute:
+    header: "<gray>Mute entry <aqua>{1} <gray>of player <aqua>{0}<gray>:"
+    content: "<newline><gray>PunishmentID: <aqua>{0}<newline><gray>Reason: <aqua>{3}<newline><gray>Initiator: <aqua>{4}<newline><gray>Date: <aqua>{5}<newline><gray>Remaining time: <aqua>{6}"
+    usage: "<gray>Usage: <aqua>/{0} <player> <gray>- {1}"
+  warn:
+    invalid-preset: "<aqua>{0} <gray>is not a valid preset id for warnings."
+    preset: "<aqua>{0} <gray>| <aqua>{1} <gray>Duration: <aqua>{2}"
+    successfully-warned: "<gray>You successfully warned <aqua>{0} <gray>for <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <presetID> <gray>- {1}"
+  unwarn:
+    invalid-id: "<aqua>{0} <gray>is not a valid warning id."
+    successfully-unwarned: "<gray>You successfully unwarned player <aqua>{0} <gray> for <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <warnID> <reason> <gray>- {1}"
+  tempwarn:
+    successfully-warned: "<gray>You successfully warned <aqua>{0} <gray>for <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <timeFormat> <reason> <gray>- {1}"
+  editwarn:
+    invalid-id: "<aqua>{0} <gray>is not a valid warning id."
+    reason: "<gray>You successfully edited the reason of the active warning of <aqua>{0} <gray>to <aqua>{1}<gray>."
+    duration: "<gray>You successfully edited the duration of the active warning of <aqua>{0} <gray>to <aqua>{1}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <player> <reason|duration> <newReason|newTimeFormat> <gray>- {1}"
+  warnlog:
+    empty: "<gray>There is no warnlog data about <aqua>{0}<gray>."
+    header: "<gray>Warnlog data of <aqua>{1}<gray>. Entries: <aqua>{0}"
+    entry: "<newline><gray>LogID: <aqua>{0}<newline><gray>PunishmentID: <aqua>{1}<newline><gray>Reason: <aqua>{3}<newline><gray>Initiator: <aqua>{4}<newline><gray>Date: <aqua>{5}"
+    actions: "<click:suggest_command:/checkpunishment {0}><gray>[<gold>Check Punishment<gray>]</click> <click:suggest_command:/deletepunishment {0}><gray>[<red>Delete Entry<gray>]</click>"
+    usage: "<gray>Usage: <aqua>/{0} <player> <gray>- {1}"
+  warnings:
+    empty: "<gray>There are no active warnings about <aqua>{0}<gray>."
+    header: "<gray>Active warnings of <aqua>{1}<gray>. Count: <aqua>{0}"
+    entry: "<newline><gray>LogID: <aqua>{0}<newline><gray>PunishmentID: <aqua>{1}<newline><gray>Reason: <aqua>{3}<newline><gray>Initiator: <aqua>{4}<newline><gray>Date: <aqua>{5}<newline><gray>Remaining time: <aqua>{6}"
+    actions: "<click:suggest_command:/unwarn {0} {1} Some reason><gray>[<gold>Cancel warning<gray>]</click>"
+    usage: "<gray>Usage: <aqua>/{0} <player> <gray>- {1}"
+  checkpunishment:
+    header: "<gray>Punishment entry <aqua>{0}<gray>:"
+    content: "<newline><gray>PunishmentID: <aqua>{0}<newline><gray>RelatedID: <aqua>{1}<newline><gray>Target: <aqua>{2}<newline><gray>Reason: <aqua>{3}<newline><gray>Initiator: <aqua>{4}<newline><gray>Date: <aqua>{5}<newline><gray>Remaining time: <aqua>{6}"
+    usage: "<gray>Usage: <aqua>/{0} <punishmentID> <gray>- {1}"
+  clearlog:
+    cleared: "<gray>You successfully cleared all {1} logs from <aqua>{0}<gray>."
+    invalid-type: "<aqua>{0} <gray>is not a valid log type."
+    usage: "<gray>Usage: <aqua>/{0} <target> <logType> <gray>- {1}"
+  deletepunishment:
+    deleted: "<gray>You successfully deleted entry <aqua>{0}<gray>."
+    usage: "<gray>Usage: <aqua>/{0} <logID> <logType> <gray>- {1}"
