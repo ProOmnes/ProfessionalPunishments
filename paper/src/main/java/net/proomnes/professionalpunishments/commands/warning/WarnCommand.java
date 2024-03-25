@@ -3,15 +3,15 @@ package net.proomnes.professionalpunishments.commands.warning;
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
 import net.proomnes.professionalpunishments.objects.Reason;
 import net.proomnes.professionalpunishments.util.messages.MessageKeys;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class WarnCommand extends Command implements TabCompleter {
+public class WarnCommand extends BukkitCommand {
 
     private final ProfessionalPunishments plugin;
 
@@ -66,7 +66,22 @@ public class WarnCommand extends Command implements TabCompleter {
 
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        return null;
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+        if (sender.hasPermission(this.getPermission())) {
+            final List<String> completer = new ArrayList<>();
+
+            if (args.length == 1) {
+                this.plugin.getServer().getOnlinePlayers().forEach(player -> {
+                    completer.add(player.getName());
+                });
+            } else if (args.length == 2) {
+                this.plugin.getDataService().warningPresets.forEach(reason -> {
+                    completer.add(reason.getId());
+                });
+            }
+
+            return completer;
+        }
+        return Collections.emptyList();
     }
 }

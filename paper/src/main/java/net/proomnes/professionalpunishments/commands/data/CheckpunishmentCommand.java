@@ -3,15 +3,14 @@ package net.proomnes.professionalpunishments.commands.data;
 import net.proomnes.professionalpunishments.ProfessionalPunishments;
 import net.proomnes.professionalpunishments.objects.Punishment;
 import net.proomnes.professionalpunishments.util.messages.MessageKeys;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
-public class CheckpunishmentCommand extends Command implements TabCompleter {
+public class CheckpunishmentCommand extends BukkitCommand {
 
     private final ProfessionalPunishments plugin;
 
@@ -56,7 +55,7 @@ public class CheckpunishmentCommand extends Command implements TabCompleter {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        return null;
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+        return Collections.emptyList();
     }
 }
