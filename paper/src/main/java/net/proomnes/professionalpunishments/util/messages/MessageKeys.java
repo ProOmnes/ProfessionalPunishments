@@ -366,12 +366,12 @@ public enum MessageKeys {
     ),
     PUNISHMENT_WARNINGS_ENTRY(
             "punishment.warnings.entry",
-            "<newline><gray>LogID: <aqua>{0}<newline><gray>PunishmentID: <aqua>{1}<newline><gray>Reason: <aqua>{3}<newline><gray>Initiator: <aqua>{4}<newline><gray>Date: <aqua>{5}<newline><gray>Remaining time: <aqua>{6}",
+            "<newline><gray>PunishmentID: <aqua>{0}<newline><gray>Reason: <aqua>{3}<newline><gray>Initiator: <aqua>{4}<newline><gray>Date: <aqua>{5}<newline><gray>Remaining time: <aqua>{6}",
             false
     ),
     PUNISHMENT_WARNINGS_ACTIONS(
             "punishment.warnings.actions",
-            "<click:suggest_command:/unwarn {0} {1} Some reason><gray>[<gold>Cancel warning<gray>]</click>",
+            "<click:suggest_command:/unwarn {1} {0} Some reason><gray>[<gold>Cancel warning<gray>]</click>",
             false
     ),
     PUNISHMENT_WARNINGS_USAGE(

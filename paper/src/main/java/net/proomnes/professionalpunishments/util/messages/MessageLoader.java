@@ -21,11 +21,12 @@ public class MessageLoader {
         Config.saveResource("lang/de-de.yml", plugin);
 
         final Config config = new Config(plugin.getDataFolder() + "/lang/" + plugin.getConfig().getString("settings.lang") + ".yml", Config.YAML);
-        config.getAll().forEach((key, value) -> {
-            if (value instanceof String) {
-                this.cachedMessages.put(key, (String) value);
+        for (Map.Entry<String, Object> map : config.getAll().entrySet()) {
+            String key = map.getKey();
+            if (map.getValue() instanceof String value) {
+                this.cachedMessages.put(key, value);
             }
-        });
+        }
     }
 
     public Component get(final MessageKeys messageKeys, final Object... toReplace) {
