@@ -565,4 +565,9 @@ public class YamlDataAccess implements IDataAccess {
         this.logs.save();
         this.logs.reload();
     }
+
+    @Override
+    public boolean connected() {
+        return true;
+    }
 }

@@ -160,4 +160,6 @@ public interface IDataAccess {
      */
     void deleteLogEntry(final String id);
 
+    boolean connected();
+
 }

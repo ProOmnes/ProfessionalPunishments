@@ -24,7 +24,13 @@ public class DataService {
     public DataService(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
 
-        this.professionalPunishments.getDataAccess().getAllLogs(this.cachedLogs::addAll);
+        int check = 0;
+        while (check == 0) {
+            if (this.professionalPunishments.getDataAccess().connected()) {
+                this.professionalPunishments.getDataAccess().getAllLogs(this.cachedLogs::addAll);
+                check++;
+            }
+        }
 
         this.professionalPunishments.getConfig().getStringList("presets.ban").forEach(entry -> {
             final String[] presetData = entry.split(":");
@@ -145,7 +151,7 @@ public class DataService {
     }
 
     public void deleteLogEntry(final String id) {
-        this.professionalPunishments.getDataService().deleteLogEntry(id);
+        this.professionalPunishments.getDataAccess().deleteLogEntry(id);
         this.cachedLogs.removeIf(log -> log.getId().equals(id));
 
         this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentLogDeleteEvent(id));

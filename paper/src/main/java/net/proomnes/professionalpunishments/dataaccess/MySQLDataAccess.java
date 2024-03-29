@@ -17,6 +17,8 @@ public class MySQLDataAccess implements IDataAccess {
 
     private final EasySQL client;
 
+    private boolean connected = false;
+
     public MySQLDataAccess(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
 
@@ -72,6 +74,7 @@ public class MySQLDataAccess implements IDataAccess {
         );
 
         professionalPunishments.getLogger().info("[MySQLClient] Connection established.");
+        this.connected = true;
     }
 
     /**
@@ -675,5 +678,10 @@ public class MySQLDataAccess implements IDataAccess {
         CompletableFuture.runAsync(() -> {
             this.client.delete("logs", new Document("id", id));
         });
+    }
+
+    @Override
+    public boolean connected() {
+        return this.connected;
     }
 }

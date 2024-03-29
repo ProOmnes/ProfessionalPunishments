@@ -19,7 +19,14 @@ public class MuteService {
     public MuteService(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
 
-        this.professionalPunishments.getDataAccess().getAllMutes(this.cachedMutes::addAll);
+        int check = 0;
+        while (check == 0) {
+            if (this.professionalPunishments.getDataAccess().connected()) {
+                this.professionalPunishments.getDataAccess().getAllMutes(this.cachedMutes::addAll);
+                check++;
+            }
+        }
+
     }
 
     public void mutePlayer(final String target, final String reason, final String initiator, final int minutes) {

@@ -27,7 +27,7 @@ public enum MessageKeys {
     ),
     SYSTEM_PUNISHMENT_ID_NOT_FOUND(
             "system.punishment.id-not-found",
-            "<aqua>{0} <gray>is not a valid punishment identification.",
+            "<aqua>{0} <gray>is not a valid punishment identification or not active anymore.",
             true
     ),
     SYSTEM_LOG_ID_NOT_FOUND(

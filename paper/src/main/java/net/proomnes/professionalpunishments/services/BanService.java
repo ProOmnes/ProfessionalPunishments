@@ -23,7 +23,14 @@ public class BanService {
     public BanService(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
 
-        this.professionalPunishments.getDataAccess().getAllBans(this.cachedBans::addAll);
+        int check = 0;
+        while (check == 0) {
+            if (this.professionalPunishments.getDataAccess().connected()) {
+                this.professionalPunishments.getDataAccess().getAllBans(this.cachedBans::addAll);
+                check++;
+            }
+        }
+
     }
 
     public void banPlayer(final String target, final String reason, final String initiator, final int minutes) {
@@ -34,6 +41,7 @@ public class BanService {
                 this.professionalPunishments.getServer().getPluginManager().callEvent(new PunishmentInitiateEvent(punishment, id, initiator));
 
                 if (punishment.targetIsOnline()) {
+                    System.out.println("online");
                     final Player player = this.professionalPunishments.getServer().getPlayer(punishment.getTarget());
                     player.kick(this.professionalPunishments.getMessageLoader().get(
                             MessageKeys.SYSTEM_SCREEN_BAN, punishment.getId(), punishment.getReason(),

@@ -21,7 +21,14 @@ public class WarningService {
     public WarningService(final ProfessionalPunishments professionalPunishments) {
         this.professionalPunishments = professionalPunishments;
 
-        this.professionalPunishments.getDataAccess().getAllActiveWarnings(this.cachedWarnings::addAll);
+        int check = 0;
+        while (check == 0) {
+            if (this.professionalPunishments.getDataAccess().connected()) {
+                this.professionalPunishments.getDataAccess().getAllActiveWarnings(this.cachedWarnings::addAll);
+                check++;
+            }
+        }
+
     }
 
     public void warnPlayer(final String target, final String reason, final String initiator, final int minutes) {
@@ -36,13 +43,13 @@ public class WarningService {
 
                 // check if warning limit is reached
                 final FileConfiguration config = this.professionalPunishments.getConfig();
-                if (config.getBoolean("warn-limit.enable")) {
+                if (config.getBoolean("settings.warn-limit.enable")) {
                     this.getActiveWarnings(target, warnings -> {
-                        if (warnings.size() >= config.getInt("warn-limit.limit")) {
+                        if (warnings.size() >= config.getInt("settings.warn-limit.limit")) {
                             this.professionalPunishments.getBanService().banPlayer(target,
-                                    config.getString("warn-limit.ban-reason"), "SYSTEM",
+                                    config.getString("settings.warn-limit.ban-reason"), "SYSTEM",
                                     this.professionalPunishments.timeFormatToMinutes(
-                                            config.getString("warn-limit.ban-duration"))
+                                            config.getString("settings.warn-limit.ban-duration"))
                             );
                         }
                     });
@@ -75,7 +82,8 @@ public class WarningService {
         try {
             punishmentReference.set(this.cachedWarnings
                     .stream()
-                    .filter(warning -> warning.getId().equals(id) && warning.getExpire() > System.currentTimeMillis())
+                    .filter(warning -> warning.getId().equals(id))
+                    .filter(warning -> warning.getExpire() >= System.currentTimeMillis())
                     .findFirst()
                     .get()
             );
